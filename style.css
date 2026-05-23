@@ -45,7 +45,7 @@ img { display: block; max-width: 100%; }
 a   { color: inherit; text-decoration: none; }
 button { cursor: none; }
 
-/* ─── CUSTOM CURSOR ─── */
+/* ─── CUSTOM CURSOR — fine-pointer (mouse) devices only ─── */
 #cursor-dot,
 #cursor-ring {
   position: fixed;
@@ -75,6 +75,26 @@ button { cursor: none; }
 body.cursor-hover #cursor-dot  { width: 12px; height: 12px; }
 body.cursor-hover #cursor-ring { width: 64px; height: 64px; }
 body.cursor-text  #cursor-ring { width: 3px; height: 48px; border-radius: 2px; }
+
+/*
+ * Touch / coarse-pointer devices (phones, tablets) and any
+ * viewport narrower than 1024 px:
+ * — restore the system cursor on <body> and <button>
+ * — fully collapse the custom cursor elements so they can
+ *   never overlap tap targets or text.
+ */
+@media (pointer: coarse), (max-width: 1023px) {
+  body,
+  button,
+  a { cursor: auto; }
+
+  #cursor-dot,
+  #cursor-ring {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
 
 /* ─── NAV ─── */
 .site-nav {

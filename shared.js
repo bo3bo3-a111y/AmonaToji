@@ -7,39 +7,55 @@
 (function () {
   'use strict';
 
-  /* ─── SMOOTH CURSOR ─── */
-  const dot  = document.getElementById('cursor-dot');
-  const ring = document.getElementById('cursor-ring');
-
-  let mouse   = { x: window.innerWidth / 2,  y: window.innerHeight / 2 };
-  let ringPos = { x: window.innerWidth / 2,  y: window.innerHeight / 2 };
-  let dotPos  = { x: window.innerWidth / 2,  y: window.innerHeight / 2 };
-
-  document.addEventListener('mousemove', (e) => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-  });
-
   function lerp(a, b, t) { return a + (b - a) * t; }
 
-  function animateCursor() {
-    dotPos.x  = lerp(dotPos.x,  mouse.x, 0.22);
-    dotPos.y  = lerp(dotPos.y,  mouse.y, 0.22);
-    ringPos.x = lerp(ringPos.x, mouse.x, 0.09);
-    ringPos.y = lerp(ringPos.y, mouse.y, 0.09);
+  /* ─── SMOOTH CURSOR — fine-pointer (mouse) devices only ─── */
+  /*
+   * `pointer: fine` is true for real mice and trackpads.
+   * It is false on phones and tablets (coarse touch) and on
+   * any device that has never had a fine pointer attached.
+   * We also skip the engine when the viewport is < 1024 px,
+   * covering the edge case of a hybrid laptop in tablet mode.
+   *
+   * When the guard fails we do NOTHING — no event listeners,
+   * no rAF loop — so there is zero performance cost on mobile.
+   */
+  const _hasFinePointer =
+    window.matchMedia('(pointer: fine)').matches &&
+    window.matchMedia('(min-width: 1024px)').matches;
 
-    if (dot)  { dot.style.left  = dotPos.x  + 'px'; dot.style.top  = dotPos.y  + 'px'; }
-    if (ring) { ring.style.left = ringPos.x + 'px'; ring.style.top = ringPos.y + 'px'; }
+  if (_hasFinePointer) {
+    const dot  = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
 
-    requestAnimationFrame(animateCursor);
+    let mouse   = { x: window.innerWidth / 2,  y: window.innerHeight / 2 };
+    let ringPos = { x: window.innerWidth / 2,  y: window.innerHeight / 2 };
+    let dotPos  = { x: window.innerWidth / 2,  y: window.innerHeight / 2 };
+
+    document.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+
+    function animateCursor() {
+      dotPos.x  = lerp(dotPos.x,  mouse.x, 0.22);
+      dotPos.y  = lerp(dotPos.y,  mouse.y, 0.22);
+      ringPos.x = lerp(ringPos.x, mouse.x, 0.09);
+      ringPos.y = lerp(ringPos.y, mouse.y, 0.09);
+
+      if (dot)  { dot.style.left  = dotPos.x  + 'px'; dot.style.top  = dotPos.y  + 'px'; }
+      if (ring) { ring.style.left = ringPos.x + 'px'; ring.style.top = ringPos.y + 'px'; }
+
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    /* cursor hover state */
+    document.querySelectorAll('a, button, .mag-btn, .product-card, .nav-cta, .nav-bag-btn').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+    });
   }
-  animateCursor();
-
-  /* cursor hover state */
-  document.querySelectorAll('a, button, .mag-btn, .product-card, .nav-cta, .nav-bag-btn').forEach(el => {
-    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-  });
 
   /* ─── MOUSE PARALLAX ─── */
   const parallaxEls = document.querySelectorAll('[data-parallax]');
