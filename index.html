@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AmonaToji — Home</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+/* ─── PAGE-SPECIFIC: INDEX ─── */
+
+/* Reveal animations */
+.will-reveal { opacity: 0; transform: translateY(3rem); transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out); }
+.will-reveal.revealed { opacity: 1; transform: translateY(0); }
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding-top: var(--nav-h);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  overflow: hidden;
+  position: relative;
+}
+
+.hero-ghost {
+  position: absolute;
+  bottom: -4rem;
+  left: -1rem;
+  font-family: var(--ff-display);
+  font-size: clamp(8rem, 18vw, 22rem);
+  line-height: 0.82;
+  color: rgba(255,255,255,0.025);
+  letter-spacing: -0.02em;
+  user-select: none;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-left {
+  padding: clamp(4rem, 8vw, 8rem) clamp(2rem, 5vw, 5rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  position: relative;
+  z-index: 1;
+}
+
+.hero-eyebrow {
+  font-family: var(--ff-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gray-4);
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.2s var(--ease-out) forwards;
+}
+.hero-eyebrow::before { content: ''; display: block; width: 2.5rem; height: 1px; background: var(--gray-3); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(2rem); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-title {
+  font-family: var(--ff-display);
+  font-size: clamp(5.5rem, 12vw, 13rem);
+  line-height: 0.87;
+  letter-spacing: -0.01em;
+  color: var(--white);
+  margin-bottom: 3rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.4s var(--ease-out) forwards;
+}
+
+.hero-copy {
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: var(--gray-5);
+  line-height: 1.85;
+  max-width: 36ch;
+  border-left: 1px solid var(--gray-3);
+  padding-left: 1.5rem;
+  margin-bottom: 3.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.6s var(--ease-out) forwards;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.8s var(--ease-out) forwards;
+}
+
+.hero-counter {
+  position: absolute;
+  top: clamp(5rem, 9vw, 9rem);
+  right: 0;
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gray-3);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.hero-counter::before { content: ''; display: block; width: 1px; height: 4rem; background: var(--gray-3); }
+
+.hero-right {
+  position: relative;
+  overflow: hidden;
+  background: var(--gray-1);
+}
+
+.hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.75;
+  transition: transform 6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s;
+  will-change: transform;
+}
+.hero-right:hover .hero-img { opacity: 0.9; }
+
+.hero-img-num {
+  position: absolute;
+  bottom: 2.5rem;
+  right: 2.5rem;
+  font-family: var(--ff-display);
+  font-size: 7rem;
+  line-height: 1;
+  color: rgba(255,255,255,0.08);
+  letter-spacing: -0.04em;
+  user-select: none;
+}
+
+/* ─── MANIFESTO ─── */
+.manifesto {
+  padding: clamp(6rem, 10vw, 12rem) clamp(2rem, 5vw, 5rem);
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.manifesto-ghost {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--ff-display);
+  font-size: clamp(6rem, 16vw, 18rem);
+  color: rgba(255,255,255,0.02);
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
+  letter-spacing: -0.02em;
+}
+
+.manifesto-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: clamp(2rem, 6vw, 8rem);
+  align-items: start;
+}
+
+.manifesto-label {
+  padding-top: 0.6rem;
+  position: sticky;
+  top: calc(var(--nav-h) + 2rem);
+}
+
+.manifesto-label span {
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gray-4);
+}
+
+.manifesto-num {
+  font-family: var(--ff-display);
+  font-size: 5rem;
+  color: var(--gray-2);
+  line-height: 1;
+  margin-top: 0.5rem;
+}
+
+.manifesto-text {
+  font-family: var(--ff-display);
+  font-size: clamp(2.2rem, 5vw, 5rem);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  color: var(--white);
+}
+
+.manifesto-body {
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--gray-5);
+  line-height: 1.9;
+  max-width: 55ch;
+  margin-top: 2.5rem;
+}
+
+/* ─── DROPS TEASER ─── */
+.drops {
+  padding-bottom: clamp(4rem, 8vw, 8rem);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.drops-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: clamp(3rem, 5vw, 5rem) clamp(2rem, 5vw, 5rem) clamp(2rem, 4vw, 3rem);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.drops-title {
+  font-family: var(--ff-display);
+  font-size: clamp(3rem, 6vw, 7rem);
+  line-height: 0.9;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
+
+.drops-link {
+  font-family: var(--ff-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gray-4);
+  border-bottom: 1px solid var(--gray-3);
+  padding-bottom: 0.15rem;
+  transition: color 0.2s, border-color 0.2s;
+}
+.drops-link:hover { color: var(--white); border-color: var(--white); }
+
+.drops-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-left: 1px solid rgba(255,255,255,0.08);
+}
+
+.drop-card {
+  border-right: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  overflow: hidden;
+  position: relative;
+}
+.drop-card:hover .drop-img { transform: scale(1.06); }
+.drop-card:hover .drop-overlay { opacity: 1; }
+
+.drop-img-wrap {
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--gray-1);
+}
+.drop-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s var(--ease-out);
+  will-change: transform;
+}
+
+.drop-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.drop-info {
+  padding: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.drop-tag {
+  font-family: var(--ff-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gray-4);
+  margin-bottom: 0.4rem;
+}
+.drop-name {
+  font-family: var(--ff-display);
+  font-size: 1.4rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--white);
+}
+.drop-price {
+  font-family: var(--ff-mono);
+  font-size: 0.82rem;
+  color: var(--gray-5);
+  margin-top: 0.5rem;
+}
+
+/* ─── STATS STRIP ─── */
+.stats-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.stat {
+  padding: clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 3vw, 3rem);
+  border-right: 1px solid rgba(255,255,255,0.08);
+  border-left: 1px solid rgba(255,255,255,0.08);
+}
+.stat:not(:first-child) { border-left: none; }
+
+.stat-num {
+  font-family: var(--ff-display);
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gray-4);
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-right { min-height: 60vw; }
+  .hero-left { border-right: none; }
+  .manifesto-inner { grid-template-columns: 1fr; }
+  .manifesto-label { position: static; }
+  .drops-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-strip { grid-template-columns: repeat(2, 1fr); }
+  .stat:nth-child(2) { border-right: none; }
+}
+
+@media (max-width: 600px) {
+  .drops-grid { grid-template-columns: 1fr; }
+  .stats-strip { grid-template-columns: 1fr 1fr; }
+  .hero-title { font-size: clamp(4.5rem, 15vw, 7rem); }
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav class="site-nav">
+  <a href="index.html" class="nav-logo">AMONATOJI</a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="shop.html">Collection</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="nav-bag-btn" onclick="openModal()" aria-label="Open bag">
+      BAG&nbsp;[<span class="nav-bag-count">0</span>]
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-ghost" data-parallax="30">AMONA<br>TOJI</div>
+
+  <div class="hero-left">
+    <div class="hero-eyebrow">Drop 001 — SS 2025</div>
+    <h1 class="hero-title" data-parallax="8">AMONA<br>TOJI</h1>
+    <p class="hero-copy" data-parallax="5">
+      Brutalist streetwear forged in Morocco. Each piece is a statement — not a product. Worn by those who understand the difference between noise and silence.
+    </p>
+    <div class="hero-actions">
+      <a href="shop.html" class="mag-btn mag-btn-primary">View Collection</a>
+      <a href="about.html" class="mag-btn mag-btn-ghost">Our Story</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <video autoplay loop muted playsinline class="hero-video">
+    <source src="img/backgrond amonatoji.mp4" type="video/mp4">
+  </video>
+    <div class="hero-img-num" data-parallax="5">01</div>
+  </div>
+
+  <div class="hero-counter">Drop 001 — 5 Pieces</div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-outer">
+  <div class="marquee-track" aria-hidden="true">
+    <span class="marquee-item">AmonaToji</span>
+    <span class="marquee-item">Drop 001</span>
+    <span class="marquee-item">SS 2025</span>
+    <span class="marquee-item">Morocco</span>
+    <span class="marquee-item">Streetwear</span>
+    <span class="marquee-item">Limited</span>
+    <span class="marquee-item">Cash On Delivery</span>
+    <span class="marquee-item">AmonaToji</span>
+    <span class="marquee-item">Drop 001</span>
+    <span class="marquee-item">SS 2025</span>
+    <span class="marquee-item">Morocco</span>
+    <span class="marquee-item">Streetwear</span>
+    <span class="marquee-item">Limited</span>
+    <span class="marquee-item">Cash On Delivery</span>
+  </div>
+</div>
+
+<!-- MANIFESTO -->
+<section class="manifesto">
+  <div class="manifesto-ghost" data-parallax="20">TOJI</div>
+  <div class="manifesto-inner">
+    <div class="manifesto-label" data-reveal>
+      <span class="s-label">Brand Vision</span>
+      <div class="manifesto-num">01</div>
+    </div>
+    <div>
+      <div class="manifesto-text" data-reveal>
+        WE DON'T FOLLOW<br>SEASONS. WE SET<br>THE TEMPERATURE.
+      </div>
+      <p class="manifesto-body" data-reveal>
+        AmonaToji is built on one conviction — that authentic clothing starts with authentic silence. No hype machines. No influencer chains. Just cut, fabric, intention. Every drop is a conversation between the maker and the wearer.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- LATEST DROPS -->
+<section class="drops">
+  <div class="drops-header">
+    <div>
+      <div class="s-label" style="margin-bottom:0.75rem">Latest Drops</div>
+      <h2 class="drops-title">WHAT'S<br>DROPPING</h2>
+    </div>
+    <a href="shop.html" class="drops-link">View All →</a>
+  </div>
+
+  <div class="drops-grid">
+    <div class="drop-card" data-reveal>
+      <div class="drop-img-wrap">
+        <img class="drop-img" src="img/p1.jpg" alt="Oversized Tee" />
+        <div class="drop-overlay">
+          <button class="mag-btn mag-btn-primary" style="font-size:0.65rem; padding:0.9rem 1.8rem;"
+            onclick="cartAddItem('Oversized Tee', 350, 'ONE', 'p1.jpg'); openModal()">Add to Bag</button>
+        </div>
+      </div>
+      <div class="drop-info">
+        <div class="drop-tag">Tops — Drop 001</div>
+        <div class="drop-name">Oversized Tee</div>
+        <div class="drop-price">350 MAD</div>
+      </div>
+    </div>
+
+    <div class="drop-card" data-reveal>
+      <div class="drop-img-wrap">
+        <img class="drop-img" src="img/p2.jpg" alt="Core Hoodie" />
+        <div class="drop-overlay">
+          <button class="mag-btn mag-btn-primary" style="font-size:0.65rem; padding:0.9rem 1.8rem;"
+            onclick="cartAddItem('Core Hoodie', 550, 'ONE', 'p2.jpg'); openModal()">Add to Bag</button>
+        </div>
+      </div>
+      <div class="drop-info">
+        <div class="drop-tag">Hoodies — Drop 001</div>
+        <div class="drop-name">Core Hoodie</div>
+        <div class="drop-price">550 MAD</div>
+      </div>
+    </div>
+
+    <div class="drop-card" data-reveal>
+      <div class="drop-img-wrap">
+        <img class="drop-img" src="img/p3.jpg" alt="Cargo Pant" />
+        <div class="drop-overlay">
+          <button class="mag-btn mag-btn-primary" style="font-size:0.65rem; padding:0.9rem 1.8rem;"
+            onclick="cartAddItem('Cargo Pant', 620, 'ONE', 'p3.jpg'); openModal()">Add to Bag</button>
+        </div>
+      </div>
+      <div class="drop-info">
+        <div class="drop-tag">Bottoms — Drop 001</div>
+        <div class="drop-name">Cargo Pant</div>
+        <div class="drop-price">620 MAD</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="stat" data-reveal>
+    <div class="stat-num">001</div>
+    <div class="stat-label">Active Drop</div>
+  </div>
+  <div class="stat" data-reveal>
+    <div class="stat-num">05</div>
+    <div class="stat-label">Pieces This Season</div>
+  </div>
+  <div class="stat" data-reveal>
+    <div class="stat-num">COD</div>
+    <div class="stat-label">Payment Method</div>
+  </div>
+  <div class="stat" data-reveal>
+    <div class="stat-num">MA</div>
+    <div class="stat-label">Made in Morocco</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand-name">AMONA<br>TOJI</div>
+      <p class="footer-tagline">Brutalist streetwear. Limited editions. Cash on delivery across Morocco.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Navigate</div>
+      <ul class="footer-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Collection</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Contact</div>
+      <ul class="footer-links">
+        <li><a href="https://wa.me/212657715301" target="_blank">WhatsApp</a></li>
+        <li><a href="shop.html#order">Order Now</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 AmonaToji. All rights reserved.</span>
+    <a href="https://wa.me/212657715301" target="_blank" class="footer-wa">→ WhatsApp Us</a>
+  </div>
+</footer>
+
+<!-- CART DRAWER BACKDROP -->
+<div id="cart-drawer-backdrop" class="cart-drawer-backdrop" onclick="closeModal()"></div>
+
+<!-- CART DRAWER -->
+<div id="cart-drawer" class="cart-drawer" role="dialog" aria-modal="true" aria-label="Your Bag">
+
+  <!-- Header -->
+  <div class="drawer-header">
+    <div>
+      <div class="drawer-title">Your Bag</div>
+      <div class="drawer-meta">Cash on Delivery · WhatsApp Confirmation</div>
+    </div>
+    <button class="drawer-close" onclick="closeModal()">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+        <path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+      Close
+    </button>
+  </div>
+
+  <!-- Scrollable body -->
+  <div class="drawer-body">
+
+    <!-- Empty state -->
+    <div id="drawer-empty" class="drawer-empty">
+      <div class="drawer-empty-label">YOUR BAG<br>IS EMPTY.</div>
+      <div class="drawer-empty-sub">Add pieces from the collection</div>
+      <a href="shop.html" class="mag-btn mag-btn-ghost" style="margin-top:1rem; font-size:0.65rem; padding:0.85rem 2rem;">Browse Collection</a>
+    </div>
+
+    <!-- Item list (populated by JS) -->
+    <div id="drawer-item-list" class="drawer-item-list"></div>
+
+    <!-- Total row -->
+    <div class="drawer-total-row" id="drawer-total-wrap" style="display:none">
+      <span class="drawer-total-label">Total</span>
+      <span class="drawer-total-price" id="drawer-total-price">0 MAD</span>
+    </div>
+
+    <!-- Checkout form -->
+    <div class="drawer-form-wrap" id="drawer-form-wrap" style="display:none">
+      <div class="form-group">
+        <label class="form-label" for="d-name">Full Name</label>
+        <input class="form-input" type="text" id="d-name" placeholder="Your full name" autocomplete="name" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="d-phone">Phone Number</label>
+        <input class="form-input" type="tel" id="d-phone" placeholder="+212 6XX XXX XXX" autocomplete="tel" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="d-address">Shipping Address</label>
+        <textarea class="form-textarea" id="d-address" placeholder="City, neighborhood, full address…" style="min-height:64px"></textarea>
+      </div>
+    </div>
+
+    <!-- Perks -->
+    <div class="drawer-perks" id="drawer-perks-wrap" style="display:none">
+      <div class="drawer-perk">Cash on delivery — pay at the door</div>
+      <div class="drawer-perk">WhatsApp confirmation same day</div>
+      <div class="drawer-perk">Morocco-wide — 2–4 days shipping</div>
+    </div>
+
+  </div>
+
+  <!-- Fixed footer CTA -->
+  <div class="drawer-footer" id="drawer-checkout-footer">
+    <button class="btn-order mag-btn" onclick="submitDrawerOrder()" style="width:100%; font-family:var(--ff-display); font-size:1.6rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--black); background:var(--white); border:none; padding:1.15rem; cursor:none; transition:background 0.2s, color 0.2s; position:relative; overflow:hidden;">
+      <span style="position:relative; z-index:1;">ORDER NOW — WHATSAPP</span>
+    </button>
+  </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+<script src="shared.js"></script>
+<script>
+  // Show/hide total + form + perks together with item list
+  var _origRender = window.cartAddItem;
+  function _syncDrawerSections() {
+    var hasItems = document.getElementById('drawer-item-list').children.length > 0;
+    ['drawer-total-wrap','drawer-form-wrap','drawer-perks-wrap'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.style.display = hasItems ? 'flex' : 'none';
+      if (el && id === 'drawer-total-wrap') el.style.display = hasItems ? 'flex' : 'none';
+      if (el && id === 'drawer-form-wrap')  el.style.display = hasItems ? 'flex' : 'none';
+      if (el && id === 'drawer-perks-wrap') el.style.display = hasItems ? 'flex' : 'none';
+    });
+  }
+
+  // Observe item list mutations to sync sections
+  var listEl = document.getElementById('drawer-item-list');
+  if (listEl) {
+    new MutationObserver(_syncDrawerSections).observe(listEl, { childList: true });
+  }
+  _syncDrawerSections();
+</script>
+</body>
+</html>

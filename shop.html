@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AmonaToji — Collection</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+/* ─── REVEAL ─── */
+.will-reveal { opacity: 0; transform: translateY(2.5rem); transition: opacity 0.85s var(--ease-out), transform 0.85s var(--ease-out); }
+.will-reveal.revealed { opacity: 1; transform: translateY(0); }
+
+/* ─── PAGE HERO ─── */
+.page-hero {
+  padding-top: var(--nav-h);
+  min-height: 52vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  overflow: hidden;
+  position: relative;
+}
+
+.page-hero-left {
+  padding: clamp(4rem, 7vw, 7rem) clamp(2rem, 5vw, 5rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  position: relative;
+}
+
+.page-hero-ghost {
+  position: absolute;
+  bottom: -2rem;
+  left: -1rem;
+  font-family: var(--ff-display);
+  font-size: clamp(6rem, 14vw, 16rem);
+  color: rgba(255,255,255,0.025);
+  user-select: none;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.page-eyebrow {
+  font-family: var(--ff-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gray-4);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  opacity: 0;
+  animation: fadeUp 0.7s 0.2s var(--ease-out) forwards;
+}
+.page-eyebrow::before { content: ''; display: block; width: 2.5rem; height: 1px; background: var(--gray-3); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(2rem); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.page-title {
+  font-family: var(--ff-display);
+  font-size: clamp(4rem, 9vw, 10rem);
+  line-height: 0.88;
+  letter-spacing: -0.01em;
+  color: var(--white);
+  margin-bottom: 0;
+  opacity: 0;
+  animation: fadeUp 0.7s 0.35s var(--ease-out) forwards;
+}
+
+.page-hero-right {
+  padding: clamp(4rem, 6vw, 6rem) clamp(2rem, 4vw, 4rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 2.5rem;
+  opacity: 0;
+  animation: fadeUp 0.7s 0.5s var(--ease-out) forwards;
+}
+
+.page-hero-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding-bottom: 0.75rem;
+}
+
+.meta-key {
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gray-4);
+}
+
+.meta-val {
+  font-family: var(--ff-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--white);
+}
+
+/* ─── FILTER BAR ─── */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem clamp(2rem, 5vw, 5rem);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.filter-group { display: flex; gap: 1.5rem; }
+
+.filter-btn {
+  font-family: var(--ff-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gray-4);
+  background: none;
+  border: none;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.filter-btn:hover,
+.filter-btn.active { color: var(--white); border-color: var(--white); }
+
+.filter-count {
+  font-family: var(--ff-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  color: var(--gray-4);
+}
+
+/* ─── PRODUCT GRID ─── */
+.product-section { border-bottom: 1px solid rgba(255,255,255,0.08); }
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-left: 1px solid rgba(255,255,255,0.08);
+}
+
+.product-card {
+  border-right: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  overflow: hidden;
+  position: relative;
+  background: var(--black);
+  transition: background 0.3s;
+}
+.product-card:hover { background: var(--gray-1); }
+.product-card:hover .pc-img { transform: scale(1.05); }
+.product-card:hover .pc-overlay { opacity: 1; }
+
+.pc-img-wrap {
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--gray-1);
+  position: relative;
+}
+
+.pc-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease-out);
+  will-change: transform;
+}
+
+.pc-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+
+.pc-quick {
+  font-family: var(--ff-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--black);
+  background: var(--white);
+  border: none;
+  padding: 0.85rem 2rem;
+  cursor: none;
+  transition: background 0.2s;
+}
+.pc-quick:hover { background: var(--gray-7); }
+
+.pc-number {
+  position: absolute;
+  top: 1rem;
+  left: 1.25rem;
+  font-family: var(--ff-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  color: rgba(255,255,255,0.35);
+}
+
+.pc-status {
+  position: absolute;
+  top: 1rem;
+  right: 1.25rem;
+  font-family: var(--ff-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--black);
+  background: var(--white);
+  padding: 0.25rem 0.65rem;
+}
+
+.pc-info {
+  padding: 1.5rem 1.75rem 2rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.pc-tag {
+  font-family: var(--ff-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gray-4);
+  margin-bottom: 0.4rem;
+}
+
+.pc-name {
+  font-family: var(--ff-display);
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  margin-bottom: 1rem;
+}
+
+.pc-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.pc-price {
+  font-family: var(--ff-display);
+  font-size: 2rem;
+  color: var(--white);
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.pc-price sub {
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  color: var(--gray-4);
+  vertical-align: bottom;
+  margin-left: 0.25rem;
+}
+
+.size-select {
+  font-family: var(--ff-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 0.5rem 1.75rem 0.5rem 0.75rem;
+  cursor: none;
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+  transition: border-color 0.2s;
+  background-image: url("data:image/svg+xml,%3Csvg width='8' height='5' viewBox='0 0 8 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L4 4L7 1' stroke='white' stroke-opacity='0.5' stroke-width='1.2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.6rem center;
+}
+.size-select:hover  { border-color: rgba(255,255,255,0.5); }
+.size-select:focus  { border-color: var(--white); }
+.size-select option { background: var(--gray-1); color: var(--white); }
+
+/* ADD TO BAG button on product card */
+.pc-add-btn {
+  width: 100%;
+  font-family: var(--ff-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--black);
+  background: var(--white);
+  border: 1px solid var(--white);
+  padding: 0.8rem 1rem;
+  cursor: none;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.pc-add-btn:hover { background: transparent; color: var(--white); }
+.pc-add-btn svg { flex-shrink: 0; }
+
+/* ─── ORDER SECTION ─── */
+.order-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  min-height: 80vh;
+}
+
+.order-left {
+  padding: clamp(4rem, 7vw, 7rem) clamp(2rem, 5vw, 5rem);
+  border-right: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--gray-1);
+  position: relative;
+  overflow: hidden;
+}
+
+.order-left-ghost {
+  position: absolute;
+  bottom: -3rem;
+  left: -1rem;
+  font-family: var(--ff-display);
+  font-size: clamp(7rem, 15vw, 17rem);
+  color: rgba(255,255,255,0.03);
+  user-select: none;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.order-left-title {
+  font-family: var(--ff-display);
+  font-size: clamp(3rem, 6vw, 7rem);
+  line-height: 0.9;
+  color: var(--white);
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.order-left-desc {
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: var(--gray-5);
+  line-height: 1.85;
+  max-width: 38ch;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.order-perks { display: flex; flex-direction: column; gap: 1rem; position: relative; }
+
+.order-perk {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: var(--ff-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gray-4);
+}
+.order-perk::before {
+  content: '';
+  display: block;
+  width: 1.5rem;
+  height: 1px;
+  background: var(--gray-3);
+  flex-shrink: 0;
+}
+
+/* ─── ORDER FORM ─── */
+.order-right {
+  padding: clamp(4rem, 7vw, 7rem) clamp(2rem, 5vw, 5rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.form-head { margin-bottom: 3rem; }
+
+.form-heading {
+  font-family: var(--ff-display);
+  font-size: 2.5rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 0.5rem;
+}
+
+.form-sub {
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gray-4);
+}
+
+.form-group { margin-bottom: 2rem; }
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.btn-order {
+  width: 100%;
+  font-family: var(--ff-display);
+  font-size: 1.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--black);
+  background: var(--white);
+  border: none;
+  padding: 1.25rem;
+  cursor: none;
+  transition: background 0.2s, color 0.2s;
+  position: relative;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+.btn-order::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--black);
+  transform: translateX(-100%);
+  transition: transform 0.4s var(--ease-out);
+  z-index: 0;
+}
+
+.btn-order:hover::after { transform: translateX(0); }
+.btn-order:hover { color: var(--white); }
+.btn-order span { position: relative; z-index: 1; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .page-hero { grid-template-columns: 1fr; }
+  .page-hero-right { padding-top: 0; }
+  .product-grid { grid-template-columns: repeat(2, 1fr); }
+  .order-section { grid-template-columns: 1fr; }
+  .order-left { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .form-row-2 { grid-template-columns: 1fr; gap: 0; }
+}
+
+@media (max-width: 600px) {
+  .product-grid { grid-template-columns: 1fr; }
+  .page-hero-left { border-right: none; }
+}
+</style>
+</head>
+<body id="order">
+
+<!-- CURSOR -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav class="site-nav">
+  <a href="index.html" class="nav-logo">AMONATOJI</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="shop.html" class="active">Collection</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="nav-bag-btn" onclick="openModal()" aria-label="Open bag">
+      BAG&nbsp;[<span class="nav-bag-count">0</span>]
+    </button>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-left">
+    <div class="page-hero-ghost" data-parallax="22">SHOP</div>
+    <div class="page-eyebrow">Drop 001 — SS 2025</div>
+    <h1 class="page-title" data-parallax="8">THE<br>COLLEC<br>TION</h1>
+  </div>
+
+  <div class="page-hero-right">
+    <div class="page-hero-meta">
+      <div class="meta-row">
+        <span class="meta-key">Season</span>
+        <span class="meta-val">Summer 2026</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-key">Drop</span>
+        <span class="meta-val">001</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-key">Pieces</span>
+        <span class="meta-val">5 Total</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-key">Payment</span>
+        <span class="meta-val">Cash on Delivery</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-key">Delivery</span>
+        <span class="meta-val">Morocco — 2–4 Days</span>
+      </div>
+    </div>
+    <button class="mag-btn mag-btn-primary" style="align-self:flex-start" onclick="openModal()">Open Bag</button>
+  </div>
+</section>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <div class="filter-group">
+    <button class="filter-btn active">All</button>
+    <button class="filter-btn">Tops</button>
+    <button class="filter-btn">Bottoms</button>
+    <button class="filter-btn">Outerwear</button>
+  </div>
+  <span class="filter-count">05 pieces</span>
+</div>
+
+<!-- PRODUCTS -->
+<section class="product-section">
+  <div class="product-grid">
+
+    <!-- 1 — Oversized Tee -->
+    <div class="product-card" data-reveal>
+      <div class="pc-img-wrap">
+        <img class="pc-img" src="img/p1.jpg" alt="Oversized Tee" />
+        <span class="pc-number">001</span>
+        <span class="pc-status">In Stock</span>
+        <div class="pc-overlay">
+          <button class="pc-quick" onclick="handleAddToBag(this, 'Oversized Tee', 350, 'p1.jpg')">Add to Bag</button>
+        </div>
+      </div>
+      <div class="pc-info">
+        <div class="pc-tag">Tops — Drop 001</div>
+        <div class="pc-name">Oversized Tee</div>
+        <div class="pc-row">
+          <div class="pc-price">350<sub>MAD</sub></div>
+          <select class="size-select" aria-label="Select size" data-product="Oversized Tee" data-price="350" data-img="p1.jpg">
+            <option value="">Size</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+          </select>
+        </div>
+        <button class="pc-add-btn" onclick="handleAddToBagFromCard(this)">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Add to Bag
+        </button>
+      </div>
+    </div>
+
+    <!-- 2 — Core Hoodie -->
+    <div class="product-card" data-reveal>
+      <div class="pc-img-wrap">
+        <img class="pc-img" src="img/p2.jpg" alt="Core Hoodie" />
+        <span class="pc-number">002</span>
+        <span class="pc-status">In Stock</span>
+        <div class="pc-overlay">
+          <button class="pc-quick" onclick="handleAddToBag(this, 'Core Hoodie', 550, 'p2.jpg')">Add to Bag</button>
+        </div>
+      </div>
+      <div class="pc-info">
+        <div class="pc-tag">Hoodies — Drop 001</div>
+        <div class="pc-name">Core Hoodie</div>
+        <div class="pc-row">
+          <div class="pc-price">550<sub>MAD</sub></div>
+          <select class="size-select" aria-label="Select size" data-product="Core Hoodie" data-price="550" data-img="p2.jpg">
+            <option value="">Size</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+          </select>
+        </div>
+        <button class="pc-add-btn" onclick="handleAddToBagFromCard(this)">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Add to Bag
+        </button>
+      </div>
+    </div>
+
+    <!-- 3 — Cargo Pant -->
+    <div class="product-card" data-reveal>
+      <div class="pc-img-wrap">
+        <img class="pc-img" src="img/p3.jpg" alt="Cargo Pant" />
+        <span class="pc-number">003</span>
+        <span class="pc-status">In Stock</span>
+        <div class="pc-overlay">
+          <button class="pc-quick" onclick="handleAddToBag(this, 'Cargo Pant', 620, 'p3.jpg')">Add to Bag</button>
+        </div>
+      </div>
+      <div class="pc-info">
+        <div class="pc-tag">Bottoms — Drop 001</div>
+        <div class="pc-name">Cargo Pant</div>
+        <div class="pc-row">
+          <div class="pc-price">620<sub>MAD</sub></div>
+          <select class="size-select" aria-label="Select size" data-product="Cargo Pant" data-price="620" data-img="p3.jpg">
+            <option value="">Size</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+          </select>
+        </div>
+        <button class="pc-add-btn" onclick="handleAddToBagFromCard(this)">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Add to Bag
+        </button>
+      </div>
+    </div>
+
+    <!-- 4 — Shell Jacket -->
+    <div class="product-card" data-reveal>
+      <div class="pc-img-wrap">
+        <img class="pc-img" src="img/p4.jpg" alt="Shell Jacket" />
+        <span class="pc-number">004</span>
+        <span class="pc-status">In Stock</span>
+        <div class="pc-overlay">
+          <button class="pc-quick" onclick="handleAddToBag(this, 'Shell Jacket', 890, 'p4.jpg')">Add to Bag</button>
+        </div>
+      </div>
+      <div class="pc-info">
+        <div class="pc-tag">Outerwear — Drop 001</div>
+        <div class="pc-name">Shell Jacket</div>
+        <div class="pc-row">
+          <div class="pc-price">890<sub>MAD</sub></div>
+          <select class="size-select" aria-label="Select size" data-product="Shell Jacket" data-price="890" data-img="p4.jpg">
+            <option value="">Size</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+          </select>
+        </div>
+        <button class="pc-add-btn" onclick="handleAddToBagFromCard(this)">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Add to Bag
+        </button>
+      </div>
+    </div>
+
+    <!-- 5 — Utility Short -->
+    <div class="product-card" data-reveal>
+      <div class="pc-img-wrap">
+        <img class="pc-img" src="img/p5.jpg" alt="Utility Short" />
+        <span class="pc-number">005</span>
+        <span class="pc-status">In Stock</span>
+        <div class="pc-overlay">
+          <button class="pc-quick" onclick="handleAddToBag(this, 'Utility Short', 290, 'p5.jpg')">Add to Bag</button>
+        </div>
+      </div>
+      <div class="pc-info">
+        <div class="pc-tag">Shorts — Drop 001</div>
+        <div class="pc-name">Utility Short</div>
+        <div class="pc-row">
+          <div class="pc-price">290<sub>MAD</sub></div>
+          <select class="size-select" aria-label="Select size" data-product="Utility Short" data-price="290" data-img="p5.jpg">
+            <option value="">Size</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+          </select>
+        </div>
+        <button class="pc-add-btn" onclick="handleAddToBagFromCard(this)">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Add to Bag
+        </button>
+      </div>
+    </div>
+
+    <!-- Promo cell -->
+    <div class="product-card" style="display:flex; flex-direction:column; justify-content:flex-end; padding:2rem 1.75rem; background:var(--gray-1);">
+      <div style="font-family:var(--ff-display); font-size:clamp(3rem,6vw,6rem); line-height:0.9; color:rgba(255,255,255,0.06); margin-bottom:auto; padding-top:1.5rem;">NEXT<br>SOON</div>
+      <span class="pc-tag" style="margin-bottom:0.5rem">Coming Next Drop</span>
+      <div class="pc-name" style="font-size:1.1rem; color:var(--gray-5);">More pieces arriving next season</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-outer">
+  <div class="marquee-track" aria-hidden="true">
+    <span class="marquee-item">Order Now</span>
+    <span class="marquee-item">Cash on Delivery</span>
+    <span class="marquee-item">Morocco</span>
+    <span class="marquee-item">2–4 Days Shipping</span>
+    <span class="marquee-item">WhatsApp Confirmation</span>
+    <span class="marquee-item">Limited Stock</span>
+    <span class="marquee-item">Order Now</span>
+    <span class="marquee-item">Cash on Delivery</span>
+    <span class="marquee-item">Morocco</span>
+    <span class="marquee-item">2–4 Days Shipping</span>
+    <span class="marquee-item">WhatsApp Confirmation</span>
+    <span class="marquee-item">Limited Stock</span>
+  </div>
+</div>
+
+<!-- ORDER FORM SECTION (legacy single-item form) -->
+<section class="order-section" id="order-form">
+  <div class="order-left">
+    <div class="order-left-ghost" data-parallax="25">COD</div>
+    <div class="s-label" style="margin-bottom:1.5rem; position:relative">Checkout</div>
+    <h2 class="order-left-title">PLACE<br>YOUR<br>ORDER</h2>
+    <p class="order-left-desc">
+      No accounts. No card details. Just your name, number, and address. We confirm within hours on WhatsApp and bring it to your door.
+    </p>
+    <div class="order-perks">
+      <div class="order-perk">Cash on delivery — pay at the door</div>
+      <div class="order-perk">WhatsApp confirmation same day</div>
+      <div class="order-perk">Free delivery above 600 MAD</div>
+      <div class="order-perk">Limited stock — order fast</div>
+    </div>
+  </div>
+
+  <div class="order-right">
+    <div class="form-head" data-reveal>
+      <div class="form-heading">Order Form</div>
+      <div class="form-sub">Fill in below · We contact you on WhatsApp</div>
+    </div>
+
+    <div class="form-group" data-reveal>
+      <label class="form-label" for="o-name">Full Name</label>
+      <input class="form-input" type="text" id="o-name" placeholder="Your full name" autocomplete="name" />
+    </div>
+
+    <div class="form-group" data-reveal>
+      <label class="form-label" for="o-phone">Phone Number</label>
+      <input class="form-input" type="tel" id="o-phone" placeholder="+212 6XX XXX XXX" autocomplete="tel" />
+    </div>
+
+    <div class="form-row-2" data-reveal>
+      <div class="form-group">
+        <label class="form-label" for="o-product">Product</label>
+        <select class="form-select-full" id="o-product">
+          <option value="">Select a piece</option>
+          <option value="Oversized Tee — 350 MAD">Oversized Tee — 350 MAD</option>
+          <option value="Core Hoodie — 550 MAD">Core Hoodie — 550 MAD</option>
+          <option value="Cargo Pant — 620 MAD">Cargo Pant — 620 MAD</option>
+          <option value="Shell Jacket — 890 MAD">Shell Jacket — 890 MAD</option>
+          <option value="Utility Short — 290 MAD">Utility Short — 290 MAD</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="o-size">Size</label>
+        <select class="form-select-full" id="o-size">
+          <option value="">Select size</option>
+          <option value="S">S</option>
+          <option value="M">M</option>
+          <option value="L">L</option>
+          <option value="XL">XL</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group" data-reveal>
+      <label class="form-label" for="o-address">Shipping Address</label>
+      <textarea class="form-textarea" id="o-address" placeholder="City, neighborhood, full address…"></textarea>
+    </div>
+
+    <button class="btn-order mag-btn" onclick="submitOrder()" data-reveal>
+      <span>Order Now — Send via WhatsApp</span>
+    </button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand-name">AMONA<br>TOJI</div>
+      <p class="footer-tagline">Brutalist streetwear. Limited editions. Cash on delivery across Morocco.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Navigate</div>
+      <ul class="footer-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Collection</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Contact</div>
+      <ul class="footer-links">
+        <li><a href="https://wa.me/212657715301" target="_blank">WhatsApp</a></li>
+        <li><a href="#order-form">Place an Order</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 AmonaToji. All rights reserved.</span>
+    <a href="https://wa.me/212657715301" target="_blank" class="footer-wa">→ WhatsApp Us</a>
+  </div>
+</footer>
+
+<!-- CART DRAWER BACKDROP -->
+<div id="cart-drawer-backdrop" class="cart-drawer-backdrop" onclick="closeModal()"></div>
+
+<!-- CART DRAWER -->
+<div id="cart-drawer" class="cart-drawer" role="dialog" aria-modal="true" aria-label="Your Bag">
+
+  <div class="drawer-header">
+    <div>
+      <div class="drawer-title">Your Bag</div>
+      <div class="drawer-meta">Cash on Delivery · WhatsApp Confirmation</div>
+    </div>
+    <button class="drawer-close" onclick="closeModal()">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+        <path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+      Close
+    </button>
+  </div>
+
+  <div class="drawer-body">
+
+    <div id="drawer-empty" class="drawer-empty">
+      <div class="drawer-empty-label">YOUR BAG<br>IS EMPTY.</div>
+      <div class="drawer-empty-sub">Select a size above and add pieces</div>
+    </div>
+
+    <div id="drawer-item-list" class="drawer-item-list"></div>
+
+    <div class="drawer-total-row" id="drawer-total-wrap" style="display:none">
+      <span class="drawer-total-label">Total</span>
+      <span class="drawer-total-price" id="drawer-total-price">0 MAD</span>
+    </div>
+
+    <div class="drawer-form-wrap" id="drawer-form-wrap" style="display:none">
+      <div class="form-group">
+        <label class="form-label" for="d-name">Full Name</label>
+        <input class="form-input" type="text" id="d-name" placeholder="Your full name" autocomplete="name" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="d-phone">Phone Number</label>
+        <input class="form-input" type="tel" id="d-phone" placeholder="+212 6XX XXX XXX" autocomplete="tel" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="d-address">Shipping Address</label>
+        <textarea class="form-textarea" id="d-address" placeholder="City, neighborhood, full address…" style="min-height:64px"></textarea>
+      </div>
+    </div>
+
+    <div class="drawer-perks" id="drawer-perks-wrap" style="display:none">
+      <div class="drawer-perk">Cash on delivery — pay at the door</div>
+      <div class="drawer-perk">WhatsApp confirmation same day</div>
+      <div class="drawer-perk">Morocco-wide — 2–4 days shipping</div>
+    </div>
+
+  </div>
+
+  <div class="drawer-footer" id="drawer-checkout-footer">
+    <button class="btn-order mag-btn" onclick="submitDrawerOrder()" style="width:100%; font-family:var(--ff-display); font-size:1.6rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--black); background:var(--white); border:none; padding:1.15rem; cursor:none; position:relative; overflow:hidden;">
+      <span style="position:relative; z-index:1;">ORDER NOW — WHATSAPP</span>
+    </button>
+  </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+<script src="shared.js"></script>
+<script>
+  /* ── Filter buttons ── */
+  document.querySelectorAll('.filter-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+      this.classList.add('active');
+    });
+  });
+
+  /* ── Observe item list to sync sections ── */
+  function _syncDrawerSections() {
+    var hasItems = document.getElementById('drawer-item-list').children.length > 0;
+    document.getElementById('drawer-total-wrap').style.display  = hasItems ? 'flex'  : 'none';
+    document.getElementById('drawer-form-wrap').style.display   = hasItems ? 'flex'  : 'none';
+    document.getElementById('drawer-perks-wrap').style.display  = hasItems ? 'flex'  : 'none';
+  }
+  new MutationObserver(_syncDrawerSections)
+    .observe(document.getElementById('drawer-item-list'), { childList: true });
+  _syncDrawerSections();
+
+  /* ── Add to Bag from product card bottom button ── */
+  window.handleAddToBagFromCard = function(btn) {
+    var card   = btn.closest('.pc-info');
+    var sel    = card.querySelector('.size-select');
+    var size   = sel ? sel.value : '';
+    var name   = sel ? sel.getAttribute('data-product') : '';
+    var price  = sel ? parseInt(sel.getAttribute('data-price'), 10) : 0;
+    var img    = sel ? sel.getAttribute('data-img')    : '';
+
+    if (!size) { showToast('Please select a size first'); return; }
+    cartAddItem(name, price, size, img);
+    openModal();
+  };
+
+  /* ── Add to Bag from overlay quick button (no size needed — opens drawer) ── */
+  window.handleAddToBag = function(btn, name, price, img) {
+    // Find the nearest size select in the same card
+    var card = btn.closest('.product-card');
+    var sel  = card ? card.querySelector('.size-select') : null;
+    var size = sel ? sel.value : '';
+    if (!size) { showToast('Select a size on the card first'); return; }
+    cartAddItem(name, price, size, img);
+    openModal();
+  };
+</script>
+</body>
+</html>
