@@ -323,6 +323,131 @@
     window.location.href = 'https://wa.me/212657715301?text=' + encodeURIComponent(msg);
   };
 
+  /* ═══════════════════════════════════════════════════
+     FEATURE 1 — LIVE MARRAKESH CLOCK
+     Finds every element with id="live-clock" or
+     class="live-clock" and ticks them once per second.
+     Uses Intl.DateTimeFormat for zero-dependency
+     timezone-accurate time (Africa/Casablanca =
+     Marrakesh/Morocco time, UTC+1 / UTC+0 in winter).
+  ═══════════════════════════════════════════════════ */
+
+  (function _initClock() {
+    const targets = document.querySelectorAll('#live-clock, .live-clock');
+    if (!targets.length) return;
+
+    const fmt = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Africa/Casablanca',
+      hour:   '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    });
+
+    function _tick() {
+      const now  = new Date();
+      const time = fmt.format(now);           // "19:04:12"
+      const str  = 'MARRAKESH, MA — ' + time;
+      targets.forEach(el => {
+        if (el.textContent !== str) el.textContent = str;
+      });
+    }
+
+    _tick();   // immediate render — no blank flash on load
+
+    // Align to the next whole second so the display
+    // always changes on the exact second boundary
+    const msUntilNextSecond = 1000 - (Date.now() % 1000);
+    setTimeout(() => {
+      _tick();
+      setInterval(_tick, 1000);
+    }, msUntilNextSecond);
+  })();
+
+  /* ═══════════════════════════════════════════════════
+     FEATURE 3 — KINETIC MAGNETIC TITLE
+     Elements with class="magnetic-title" subtly warp
+     toward the cursor when the pointer is within a
+     configurable radius.  Outside that radius the
+     element springs back via CSS transition.
+     Desktop / fine-pointer only — no touch overhead.
+  ═══════════════════════════════════════════════════ */
+
+  if (_hasFinePointer) {
+    const MAGNETIC_RADIUS  = 320;   // px — proximity activation zone
+    const SKEW_STRENGTH    = 5;     // max skewX degrees
+    const TRANSLATE_FACTOR = 0.08;  // fraction of delta to translate
+
+    const magTitles = document.querySelectorAll('.magnetic-title');
+
+    if (magTitles.length) {
+      document.addEventListener('mousemove', (e) => {
+        magTitles.forEach(el => {
+          const rect  = el.getBoundingClientRect();
+          const cx    = rect.left + rect.width  / 2;
+          const cy    = rect.top  + rect.height / 2;
+          const dx    = e.clientX - cx;
+          const dy    = e.clientY - cy;
+          const dist  = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < MAGNETIC_RADIUS) {
+            const pull   = 1 - dist / MAGNETIC_RADIUS;   // 0 → 1 as cursor nears
+            const tx     = dx * TRANSLATE_FACTOR * pull;
+            const ty     = dy * TRANSLATE_FACTOR * pull;
+            const skewX  = -(dx / MAGNETIC_RADIUS) * SKEW_STRENGTH * pull;
+
+            el.classList.add('is-tracking');
+            el.style.transform = `translate(${tx}px, ${ty}px) skewX(${skewX}deg)`;
+          } else {
+            // Outside radius — let CSS transition spring it back
+            if (el.classList.contains('is-tracking')) {
+              el.classList.remove('is-tracking');
+              el.style.transform = '';
+            }
+          }
+        });
+      });
+
+      // Hard reset on mouse leave (window exit)
+      document.addEventListener('mouseleave', () => {
+        magTitles.forEach(el => {
+          el.classList.remove('is-tracking');
+          el.style.transform = '';
+        });
+      });
+    }
+  }
+
+  /* ═══════════════════════════════════════════════════
+     FEATURE 4 — MASKED IMAGE REVEAL ON SCROLL
+     Elements with class="img-reveal-wrap" get observed
+     by the same IntersectionObserver pattern already
+     used for [data-reveal].  When 15 % of the wrapper
+     enters the viewport, .img-revealed is added —
+     which collapses the CSS curtain and scales the img.
+     Uses a staggered threshold so tall grids feel
+     sequential rather than all-at-once.
+  ═══════════════════════════════════════════════════ */
+
+  (function _initImageReveal() {
+    const revealWraps = document.querySelectorAll('.img-reveal-wrap');
+    if (!revealWraps.length) return;
+
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('img-revealed');
+          obs.unobserve(entry.target);  // fire once — no re-hide on scroll back
+        }
+      });
+    }, {
+      threshold: 0.15,
+      rootMargin: '0px 0px -40px 0px',   // trigger slightly before full in-view
+    });
+
+    revealWraps.forEach(el => obs.observe(el));
+  })();
+
   /* ─── Init on load ─── */
   _loadCart();
   _updateAllBadges();
