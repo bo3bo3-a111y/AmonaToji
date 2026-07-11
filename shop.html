@@ -609,33 +609,40 @@
 
     <!-- 3 — Cargo Pant -->
     <div class="product-card" data-reveal>
-      <div class="pc-img-wrap">
-        <img class="pc-img" src="img/p3.jpg" alt="Cargo Pant" />
-        <span class="pc-number">003</span>
-        <span class="pc-status">In Stock</span>
-        <div class="pc-overlay">
-          <button class="pc-quick" onclick="handleAddToBag(this, 'Cargo Pant', 620, 'p3.jpg')">Add to Bag</button>
-        </div>
-      </div>
-      <div class="pc-info">
-        <div class="pc-tag">Bottoms — Drop 001</div>
-        <div class="pc-name">Cargo Pant</div>
-        <div class="pc-row">
-          <div class="pc-price">620<sub>MAD</sub></div>
-          <select class="size-select" aria-label="Select size" data-product="Cargo Pant" data-price="620" data-img="p3.jpg">
-            <option value="">Size</option>
-            <option value="S">S</option>
-            <option value="M">M</option>
-            <option value="L">L</option>
-            <option value="XL">XL</option>
-          </select>
-        </div>
-        <button class="pc-add-btn" onclick="handleAddToBagFromCard(this)">
-          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-          Add to Bag
-        </button>
+  <a href="product.html?item=cargo-pant" style="text-decoration: none; color: inherit; display: block; cursor: none;">
+    <div class="pc-img-wrap">
+      <img class="pc-img" src="img/p3.jpg" alt="Cargo Pant" />
+      <span class="pc-number">003</span>
+      <span class="pc-status">In Stock</span>
+      <div class="pc-overlay">
+        <button class="pc-quick" onclick="event.stopPropagation(); handleAddToBag(this, 'Cargo Pant', 620, 'p3.jpg')">Add to Bag</button>
       </div>
     </div>
+  </a>
+
+  <div class="pc-info">
+    <div class="pc-tag">Bottoms — Drop 001</div>
+    
+    <a href="product.html?item=cargo-pant" style="text-decoration: none; color: inherit; cursor: none;">
+      <div class="pc-name" style="transition: opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">Cargo Pant</div>
+    </a>
+
+    <div class="pc-row">
+      <div class="pc-price">620<sub>MAD</sub></div>
+      <select class="size-select" aria-label="Select size" data-product="Cargo Pant" data-price="620" data-img="p3.jpg">
+        <option value="">Size</option>
+        <option value="S">S</option>
+        <option value="M">M</option>
+        <option value="L">L</option>
+        <option value="XL">XL</option>
+      </select>
+    </div>
+    <button class="pc-add-btn" onclick="handleAddToBagFromCard(this)">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      Add to Bag
+    </button>
+  </div>
+</div>
 
     <!-- 4 — Shell Jacket -->
     <div class="product-card" data-reveal>

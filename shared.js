@@ -293,7 +293,7 @@
       '💳 Payment: Cash on Delivery\n' +
       '_Sent from AmonaToji.com_';
 
-    window.location.href = 'https://wa.me/212657715301?text=' + encodeURIComponent(msg);
+    window.location.href = 'https://wa.me/212632376342?text=' + encodeURIComponent(msg);
   };
 
   /* ─── Legacy submitOrder (shop order form section) ─── */
@@ -320,7 +320,7 @@
       '💳 Payment: Cash on Delivery\n' +
       '_Sent from AmonaToji.com_';
 
-    window.location.href = 'https://wa.me/212657715301?text=' + encodeURIComponent(msg);
+    window.location.href = 'https://wa.me/212632376342?text=' + encodeURIComponent(msg);
   };
 
   /* ═══════════════════════════════════════════════════
