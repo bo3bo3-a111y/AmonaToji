@@ -152,7 +152,15 @@
   }
 
   /* Public API */
+ /* Public API */
   window.cartAddItem = function (name, price, size, img) {
+    // 1. تحقق إضافي في حالة ما إذا مرر الكود مقاساً فارغاً بالخطأ
+    if (!size || size === "" || size === "ONE") {
+      // إذا كنت تستعمل دالة handleDropBagClick في الـ HTML فلا داعي للقلق، هذا مجرد جدار حماية إضافي
+      showToast('المرجو اختيار المقاس أولاً');
+      return;
+    }
+
     _loadCart();
     const id = Date.now() + '_' + Math.random().toString(36).slice(2, 7);
     _cart.push({ id, name, price, size, img });

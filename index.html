@@ -255,6 +255,132 @@
   border-left: 1px solid rgba(255,255,255,0.08);
 }
 
+/* ─── SIZE SELECTION MODAL ─── */
+.size-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 899;
+  background: rgba(0,0,0,0);
+  -webkit-backdrop-filter: blur(0px);
+  backdrop-filter: blur(0px);
+  pointer-events: none;
+  transition: background 0.35s var(--ease-out), backdrop-filter 0.35s var(--ease-out);
+}
+.size-modal-backdrop.open {
+  background: rgba(0,0,0,0.72);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  pointer-events: all;
+}
+
+.size-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: min(380px, 90vw);
+  z-index: 900;
+  background: var(--black);
+  border: 1px solid rgba(255,255,255,0.12);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.94);
+  pointer-events: none;
+  transition: opacity 0.32s var(--ease-out), transform 0.32s var(--ease-out);
+}
+.size-modal.open {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: all;
+}
+
+.size-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1.75rem 1.75rem 1.25rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.size-modal-title {
+  font-family: var(--ff-display);
+  font-size: 1.2rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--white);
+  line-height: 1.15;
+  padding-right: 1rem;
+}
+
+.size-modal-price {
+  font-family: var(--ff-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--gray-4);
+  margin-top: 0.5rem;
+}
+
+.size-modal-close {
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  color: var(--gray-4);
+  background: none;
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 0.55rem 0.7rem;
+  cursor: none;
+  flex-shrink: 0;
+  transition: color 0.2s, border-color 0.2s;
+}
+.size-modal-close:hover { color: var(--white); border-color: rgba(255,255,255,0.4); }
+
+.size-modal-body { padding: 1.5rem 1.75rem 1.75rem; }
+
+.size-modal-label {
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gray-4);
+  margin-bottom: 1rem;
+}
+
+.size-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem;
+  margin-bottom: 1.75rem;
+}
+
+.size-opt {
+  font-family: var(--ff-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  color: var(--white);
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 0.85rem 0;
+  cursor: none;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.size-opt:hover { border-color: rgba(255,255,255,0.6); }
+.size-opt.active { background: var(--white); color: var(--black); border-color: var(--white); }
+
+.size-modal-confirm {
+  width: 100%;
+  font-family: var(--ff-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  background: var(--white);
+  color: var(--black);
+  border: 1px solid var(--white);
+  padding: 1.05rem 0;
+  cursor: none;
+  opacity: 0.35;
+  pointer-events: none;
+  transition: opacity 0.2s, background 0.2s, color 0.2s;
+}
+.size-modal-confirm.ready { opacity: 1; pointer-events: all; }
+.size-modal-confirm.ready:hover { background: transparent; color: var(--white); }
+
 .drop-card {
   border-right: 1px solid rgba(255,255,255,0.08);
   border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -389,8 +515,8 @@
   <div class="hero-ghost" data-parallax="30">AMONA<br>TOJI</div>
 
   <div class="hero-left">
-    <div class="hero-eyebrow">Drop 001 — SS 2025</div>
-    <h1 class="hero-title" data-parallax="8">AMONA<br>TOJI</h1>
+    <div class="hero-eyebrow">Drop 001 — SS 2026</div>
+    <h1 class="hero-title" data-parallax="8">AMONATOJI</h1>
     <p class="hero-copy" data-parallax="5">
       Brutalist streetwear forged in Morocco. Each piece is a statement — not a product. Worn by those who understand the difference between noise and silence.
     </p>
@@ -401,11 +527,10 @@
   </div>
 
   <div class="hero-right">
-    <video autoplay loop muted playsinline class="hero-video">
-    <source src="img/AmonaToji vd website.mp4" type="video/mp4">
-  </video>
-    <div class="hero-img-num" data-parallax="5">01</div>
-  </div>
+  <img src="img/Amonatoji.jpg" alt="Amonatoji Hero" class="hero-video">
+  
+  <div class="hero-img-num" data-parallax="5">01</div>
+</div>
 
   <div class="hero-counter">Drop 001 — 5 Pieces</div>
 </section>
@@ -415,14 +540,14 @@
   <div class="marquee-track" aria-hidden="true">
     <span class="marquee-item">AmonaToji</span>
     <span class="marquee-item">Drop 001</span>
-    <span class="marquee-item">SS 2025</span>
+    <span class="marquee-item">SS 2026</span>
     <span class="marquee-item">Morocco</span>
     <span class="marquee-item">Streetwear</span>
     <span class="marquee-item">Limited</span>
     <span class="marquee-item">Cash On Delivery</span>
     <span class="marquee-item">AmonaToji</span>
     <span class="marquee-item">Drop 001</span>
-    <span class="marquee-item">SS 2025</span>
+    <span class="marquee-item">SS 2026</span>
     <span class="marquee-item">Morocco</span>
     <span class="marquee-item">Streetwear</span>
     <span class="marquee-item">Limited</span>
@@ -460,48 +585,60 @@
   </div>
 
   <div class="drops-grid">
+    <!-- 1 — Rei Evangelion -->
     <div class="drop-card" data-reveal>
       <div class="drop-img-wrap">
-        <img class="drop-img" src="img/p1.jpg" alt="Oversized Tee" />
+        <img class="drop-img" src="img/p1.jpg" alt="Rei evangelion Oversize T-Shirt" />
         <div class="drop-overlay">
           <button class="mag-btn mag-btn-primary" style="font-size:0.65rem; padding:0.9rem 1.8rem;"
-            onclick="cartAddItem('Oversized Tee', 350, 'ONE', 'p1.jpg'); openModal()">Add to Bag</button>
+            onclick="openSizeModal('Rei evangelion Oversize T-Shirt', 187, 'img/p1.jpg')">Add to Bag</button>
         </div>
       </div>
       <div class="drop-info">
-        <div class="drop-tag">Tops — Drop 001</div>
-        <div class="drop-name">Oversized Tee</div>
-        <div class="drop-price">350 MAD</div>
+        <div class="drop-tag">Oversize T-Shirt 240gsm</div>
+        <div class="drop-name">Rei evangelion Oversize T-Shirt</div>
+        <div class="drop-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+          <div class="drop-price">187 MAD</div>
+          
+        </div>
       </div>
     </div>
 
+    <!-- 2 — Gojo's Hands -->
     <div class="drop-card" data-reveal>
       <div class="drop-img-wrap">
-        <img class="drop-img" src="img/p2.jpg" alt="Core Hoodie" />
+        <img class="drop-img" src="img/p2.jpg" alt="Gojo's hands Oversize T-Shirt" />
         <div class="drop-overlay">
           <button class="mag-btn mag-btn-primary" style="font-size:0.65rem; padding:0.9rem 1.8rem;"
-            onclick="cartAddItem('Core Hoodie', 550, 'ONE', 'p2.jpg'); openModal()">Add to Bag</button>
+            onclick="openSizeModal('Gojo\'s hands Oversize T-Shirt', 199, 'img/p2.jpg')">Add to Bag</button>
         </div>
       </div>
       <div class="drop-info">
-        <div class="drop-tag">Hoodies — Drop 001</div>
-        <div class="drop-name">Core Hoodie</div>
-        <div class="drop-price">550 MAD</div>
+        <div class="drop-tag">Oversize T-Shirt 240gsm</div>
+        <div class="drop-name">Gojo's hands Oversize T-Shirt</div>
+        <div class="drop-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+          <div class="drop-price">199 MAD</div>
+          
+        </div>
       </div>
     </div>
 
+    <!-- 3 — Kurapika -->
     <div class="drop-card" data-reveal>
       <div class="drop-img-wrap">
-        <img class="drop-img" src="img/p3.jpg" alt="Cargo Pant" />
+        <img class="drop-img" src="img/p3.jpg" alt="kurapika Oversize T-Shirt" />
         <div class="drop-overlay">
           <button class="mag-btn mag-btn-primary" style="font-size:0.65rem; padding:0.9rem 1.8rem;"
-            onclick="cartAddItem('Cargo Pant', 620, 'ONE', 'p3.jpg'); openModal()">Add to Bag</button>
+            onclick="openSizeModal('kurapika Oversize T-Shirt', 199, 'img/p3.jpg')">Add to Bag</button>
         </div>
       </div>
       <div class="drop-info">
-        <div class="drop-tag">Bottoms — Drop 001</div>
-        <div class="drop-name">Cargo Pant</div>
-        <div class="drop-price">620 MAD</div>
+        <div class="drop-tag">Oversize T-Shirt 240gsm</div>
+        <div class="drop-name">kurapika Oversize T-Shirt</div>
+        <div class="drop-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+          <div class="drop-price">199 MAD</div>
+          
+        </div>
       </div>
     </div>
   </div>
@@ -629,9 +766,84 @@
 
 </div>
 
+<!-- SIZE SELECTION MODAL -->
+<div id="size-modal-backdrop" class="size-modal-backdrop" onclick="closeSizeModal()"></div>
+<div id="size-modal" class="size-modal" role="dialog" aria-modal="true" aria-label="Select size">
+  <div class="size-modal-header">
+    <div>
+      <div class="size-modal-title" id="size-modal-name">Product</div>
+      <div class="size-modal-price" id="size-modal-price">0 MAD</div>
+    </div>
+    <button class="size-modal-close" onclick="closeSizeModal()" aria-label="Close">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+        <path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+  <div class="size-modal-body">
+    <div class="size-modal-label">Select Size</div>
+    <div class="size-modal-grid" id="size-modal-grid">
+      <button type="button" class="size-opt" data-size="S">S</button>
+      <button type="button" class="size-opt" data-size="M">M</button>
+      <button type="button" class="size-opt" data-size="L">L</button>
+      <button type="button" class="size-opt" data-size="XL">XL</button>
+    </div>
+    <button type="button" class="size-modal-confirm" id="size-modal-confirm">Add to Bag</button>
+  </div>
+</div>
+
 <div id="toast" class="toast"></div>
 <script src="shared.js"></script>
 <script>
+  // ─── SIZE SELECTION MODAL ───
+  var _pendingItem = null;
+  var _selectedSize = '';
+
+  function openSizeModal(name, price, img) {
+    _pendingItem = { name: name, price: price, img: img };
+    _selectedSize = '';
+
+    document.getElementById('size-modal-name').textContent = name;
+    document.getElementById('size-modal-price').textContent = price + ' MAD';
+
+    document.querySelectorAll('#size-modal-grid .size-opt').forEach(function (b) {
+      b.classList.remove('active');
+    });
+    document.getElementById('size-modal-confirm').classList.remove('ready');
+
+    document.getElementById('size-modal-backdrop').classList.add('open');
+    document.getElementById('size-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeSizeModal() {
+    document.getElementById('size-modal-backdrop').classList.remove('open');
+    document.getElementById('size-modal').classList.remove('open');
+    document.body.style.overflow = '';
+    _pendingItem = null;
+  }
+
+  document.getElementById('size-modal-grid').addEventListener('click', function (e) {
+    var btn = e.target.closest('.size-opt');
+    if (!btn) return;
+    _selectedSize = btn.dataset.size;
+    this.querySelectorAll('.size-opt').forEach(function (b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById('size-modal-confirm').classList.add('ready');
+  });
+
+  document.getElementById('size-modal-confirm').addEventListener('click', function () {
+    if (!_selectedSize || !_pendingItem) return;
+    window.cartAddItem(_pendingItem.name, _pendingItem.price, _selectedSize, _pendingItem.img);
+    closeSizeModal();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && document.getElementById('size-modal').classList.contains('open')) {
+      closeSizeModal();
+    }
+  });
+
   // Show/hide total + form + perks together with item list
   var _origRender = window.cartAddItem;
   function _syncDrawerSections() {
