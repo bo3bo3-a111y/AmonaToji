@@ -1,0 +1,28 @@
+{
+  "extends": [
+    "development"
+  ],
+  "hints": {
+    "compat-api/css": [
+      "default",
+      {
+        "ignore": [
+          "user-select",
+          "scrollbar-width",
+          "scrollbar-color",
+          "scrollbar-width: thin"
+        ]
+      }
+    ],
+    "no-inline-styles": "off",
+    "disown-opener": "off",
+    "compat-api/html": [
+      "default",
+      {
+        "ignore": [
+          "video[playsinline]"
+        ]
+      }
+    ]
+  }
+}
