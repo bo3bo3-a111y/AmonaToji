@@ -32,6 +32,9 @@
   line-height: 0.82;
   color: rgba(255,255,255,0.025);
   letter-spacing: -0.02em;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
   pointer-events: none;
   z-index: 0;
@@ -142,7 +145,10 @@
   line-height: 1;
   color: rgba(255,255,255,0.08);
   letter-spacing: -0.04em;
-  user-select: none;
+  -webkit-user-select: none; 
+  -moz-user-select: none;    
+  -ms-user-select: none;     
+  user-select: none;         
 }
 
 /* ─── MANIFESTO ─── */
@@ -154,17 +160,21 @@
 }
 
 .manifesto-ghost {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: var(--ff-display);
-  font-size: clamp(6rem, 16vw, 18rem);
-  color: rgba(255,255,255,0.02);
-  white-space: nowrap;
-  user-select: none;
-  pointer-events: none;
-  letter-spacing: -0.02em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--ff-display);
+    font-size: clamp(6rem, 16vw, 18rem);
+    color: rgba(255, 255, 255, 0.02);
+    white-space: nowrap;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    /* -------------------------- */
+    pointer-events: none;
+    letter-spacing: -0.02em;
 }
 
 .manifesto-inner {
@@ -591,7 +601,7 @@
         <img class="drop-img" src="img/p1.jpg" alt="Rei evangelion Oversize T-Shirt" />
         <div class="drop-overlay">
           <button class="mag-btn mag-btn-primary" style="font-size:0.65rem; padding:0.9rem 1.8rem;"
-            onclick="openSizeModal('Rei evangelion Oversize T-Shirt', 187, 'img/p1.jpg')">Add to Bag</button>
+            onclick="openSizeModal('Rei evangelion Oversize T-Shirt', 187, 'p1.jpg')">Add to Bag</button>
         </div>
       </div>
       <div class="drop-info">
@@ -610,7 +620,7 @@
         <img class="drop-img" src="img/p2.jpg" alt="Gojo's hands Oversize T-Shirt" />
         <div class="drop-overlay">
           <button class="mag-btn mag-btn-primary" style="font-size:0.65rem; padding:0.9rem 1.8rem;"
-            onclick="openSizeModal('Gojo\'s hands Oversize T-Shirt', 199, 'img/p2.jpg')">Add to Bag</button>
+            onclick="openSizeModal('Gojo\'s hands Oversize T-Shirt', 199, 'p2.jpg')">Add to Bag</button>
         </div>
       </div>
       <div class="drop-info">
@@ -629,7 +639,7 @@
         <img class="drop-img" src="img/p3.jpg" alt="kurapika Oversize T-Shirt" />
         <div class="drop-overlay">
           <button class="mag-btn mag-btn-primary" style="font-size:0.65rem; padding:0.9rem 1.8rem;"
-            onclick="openSizeModal('kurapika Oversize T-Shirt', 199, 'img/p3.jpg')">Add to Bag</button>
+            onclick="openSizeModal('kurapika Oversize T-Shirt', 199, 'p3.jpg')">Add to Bag</button>
         </div>
       </div>
       <div class="drop-info">
@@ -682,14 +692,14 @@
     <div>
       <div class="footer-col-title">Contact</div>
       <ul class="footer-links">
-        <li><a href="https://wa.me/212657715301" target="_blank">WhatsApp</a></li>
-        <li><a href="shop.html#order">Order Now</a></li>
+        <li><a href="https://wa.me/212657715301" target="_blank" rel="noopener">WhatsApp</a></li>
+        <li><a href="shop.html#order-form">Order Now</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
     <span class="footer-copy">© 2025 AmonaToji. All rights reserved.</span>
-    <a href="https://wa.me/212657715301" target="_blank" class="footer-wa">→ WhatsApp Us</a>
+    <a href="https://wa.me/212657715301" target="_blank" rel="noopener" class="footer-wa">→ WhatsApp Us</a>
   </div>
 </footer>
 
