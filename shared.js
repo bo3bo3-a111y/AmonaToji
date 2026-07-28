@@ -108,6 +108,17 @@
   const revealObs = new IntersectionObserver(onReveal, { threshold: 0.12 });
   revealEls.forEach(el => { el.classList.add('will-reveal'); revealObs.observe(el); });
 
+  /* ─── COLOR SWATCH SELECTION (generic, works on any page) ─── */
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.color-opt');
+    if (!btn) return;
+    var group = btn.closest('.color-select-wrap');
+    if (!group) return;
+    group.querySelectorAll('.color-opt').forEach(function (b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    group.dispatchEvent(new CustomEvent('colorchange', { detail: { color: btn.dataset.color } }));
+  });
+
   /* ─── TOAST ─── */
   window.showToast = function (msg) {
     let t = document.getElementById('toast');
@@ -153,7 +164,7 @@
 
   /* Public API */
  /* Public API */
-  window.cartAddItem = function (name, price, size, img) {
+  window.cartAddItem = function (name, price, size, img, color) {
     // 1. تحقق إضافي في حالة ما إذا مرر الكود مقاساً فارغاً بالخطأ
     if (!size || size === "" || size === "ONE") {
       // إذا كنت تستعمل دالة handleDropBagClick في الـ HTML فلا داعي للقلق، هذا مجرد جدار حماية إضافي
@@ -161,13 +172,19 @@
       return;
     }
 
+    // 2. تحقق من اختيار اللون (أبيض / أسود)
+    if (!color || color === "") {
+      showToast('المرجو اختيار اللون أولاً');
+      return;
+    }
+
     _loadCart();
     const id = Date.now() + '_' + Math.random().toString(36).slice(2, 7);
-    _cart.push({ id, name, price, size, img });
+    _cart.push({ id, name, price, size, img, color });
     _saveCart();
     _updateAllBadges();
     _renderDrawerItems();
-    showToast(name + ' · ' + size + ' added to bag');
+    showToast(name + ' · ' + size + ' · ' + color + ' added to bag');
   };
 
   window.cartRemoveItem = function (id) {
@@ -200,17 +217,29 @@
     const footer = document.getElementById('drawer-checkout-footer');
     const totalEl = document.getElementById('drawer-total-price');
 
+    // These three sections are optional on any given page — some
+    // pages may not render them — so every reference is null-guarded.
+    const totalWrap = document.getElementById('drawer-total-wrap');
+    const formWrap  = document.getElementById('drawer-form-wrap');
+    const perksWrap = document.getElementById('drawer-perks-wrap');
+
     if (!list) return;
 
     if (_cart.length === 0) {
       list.innerHTML = '';
       if (empty)  empty.style.display  = 'flex';
       if (footer) footer.style.display = 'none';
+      if (totalWrap) totalWrap.style.display = 'none';
+      if (formWrap)  formWrap.style.display  = 'none';
+      if (perksWrap) perksWrap.style.display = 'none';
       return;
     }
 
     if (empty)  empty.style.display  = 'none';
     if (footer) footer.style.display = 'flex';
+    if (totalWrap) totalWrap.style.display = 'flex';
+    if (formWrap)  formWrap.style.display  = 'flex';
+    if (perksWrap) perksWrap.style.display = 'flex';
 
     list.innerHTML = _cart.map(item => `
       <div class="di-row" data-id="${item.id}">
@@ -221,6 +250,7 @@
           <div class="di-name">${item.name}</div>
           <div class="di-meta">
             <span class="di-size">SIZE ${item.size}</span>
+            ${item.color ? `<span class="di-color"><span class="di-color-dot" style="background:${item.color === 'Black' ? '#000' : '#fff'}"></span>${item.color}</span>` : ''}
             <span class="di-price">${item.price} MAD</span>
           </div>
         </div>
@@ -283,7 +313,7 @@
     if (!address) { showToast('Please enter your address');      return; }
 
     const itemLines = _cart.map((item, i) =>
-      `  ${i + 1}. ${item.name} · Size ${item.size} · ${item.price} MAD`
+      `  ${i + 1}. ${item.name} · Size ${item.size} · Color ${item.color || '-'} · ${item.price} MAD`
     ).join('\n');
 
     const total = _cartTotal();
@@ -311,12 +341,15 @@
     const address = (document.getElementById('o-address') || {}).value?.trim();
     const product = (document.getElementById('o-product') || {}).value;
     const size    = (document.getElementById('o-size')    || {}).value;
+    const colorEl = document.querySelector('#order-form-color-wrap .color-opt.active');
+    const color   = colorEl ? colorEl.dataset.color : '';
 
     if (!name)    { showToast('Please enter your full name');    return; }
     if (!phone)   { showToast('Please enter your phone number'); return; }
     if (!address) { showToast('Please enter your address');      return; }
     if (!product) { showToast('Please select a product');        return; }
     if (!size)    { showToast('Please select a size');           return; }
+    if (!color)   { showToast('Please select a color');          return; }
 
     const msg =
       '🖤 *ORDER — AMONATOJI*\n\n' +
@@ -324,6 +357,7 @@
       '📞 Phone: '   + phone   + '\n' +
       '📦 Product: ' + product + '\n' +
       '📐 Size: '    + size    + '\n' +
+      '🎨 Color: '   + color   + '\n' +
       '📍 Address: ' + address + '\n\n' +
       '💳 Payment: Cash on Delivery\n' +
       '_Sent from AmonaToji.com_';
