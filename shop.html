@@ -549,9 +549,48 @@
   </ul>
   <div class="nav-right">
     <button class="nav-bag-btn" onclick="openModal()" aria-label="Open bag">
+      <svg class="nav-bag-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="3.5" y="7.5" width="17" height="13" rx="2" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M3.5 11.5h17" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M7 7.5V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        <circle cx="16.5" cy="14.5" r="1.3" fill="currentColor"/>
+      </svg>
       BAG&nbsp;[<span class="nav-bag-count">0</span>]
     </button>
   </div>
+</nav>
+
+<!-- MOBILE BOTTOM TAB BAR — keeps Home / Collection / Bag reachable
+     with a thumb at any scroll position on touch devices -->
+<nav class="mobile-tabbar" aria-label="Mobile quick navigation">
+  <a href="index.html" class="tab-item">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4 11.5 12 4l8 7.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M6 10v9a1 1 0 0 0 1 1h3v-5.5h4V20h3a1 1 0 0 0 1-1v-9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span>Home</span>
+  </a>
+  <a href="shop.html" class="tab-item active">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="4" y="4" width="7" height="7" stroke="currentColor" stroke-width="1.4"/>
+      <rect x="13" y="4" width="7" height="7" stroke="currentColor" stroke-width="1.4"/>
+      <rect x="4" y="13" width="7" height="7" stroke="currentColor" stroke-width="1.4"/>
+      <rect x="13" y="13" width="7" height="7" stroke="currentColor" stroke-width="1.4"/>
+    </svg>
+    <span>Collection</span>
+  </a>
+  <button type="button" class="tab-item" onclick="openModal()" aria-label="Open bag">
+    <span class="tab-icon-wrap">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="3.5" y="7.5" width="17" height="13" rx="2" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M3.5 11.5h17" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M7 7.5V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        <circle cx="16.5" cy="14.5" r="1.3" fill="currentColor"/>
+      </svg>
+      <span class="tab-badge nav-bag-count is-empty">0</span>
+    </span>
+    <span>Bag</span>
+  </button>
 </nav>
 
 <!-- PAGE HERO -->

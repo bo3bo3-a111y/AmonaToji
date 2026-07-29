@@ -228,6 +228,7 @@
     const count = _cart.length;
     document.querySelectorAll('.nav-bag-count').forEach(el => {
       el.textContent = count;
+      el.classList.toggle('is-empty', count === 0);
     });
   }
 

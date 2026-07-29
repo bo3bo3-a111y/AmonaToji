@@ -165,7 +165,7 @@ body.cursor-text  #cursor-ring { width: 3px; height: 48px; border-radius: 2px; }
 .nav-bag-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0;
+  gap: 0.55rem;
   font-family: var(--ff-mono);
   font-size: 0.65rem;
   font-weight: 400;
@@ -190,6 +190,90 @@ body.cursor-text  #cursor-ring { width: 3px; height: 48px; border-radius: 2px; }
   font-size: 0.65rem;
 }
 /* bracket chars rendered in markup, count inside */
+
+/* Wallet / pouch glyph — shared across the desktop bag button
+   and the mobile tab bar so the icon language stays consistent */
+.nav-bag-icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  stroke: currentColor;
+}
+
+/* ═══════════════════════════════════════════════════
+   MOBILE BOTTOM TAB BAR
+   A slim, glassy tab bar that keeps "Collection" and
+   "Bag" reachable at all times on touch devices, without
+   duplicating the desktop nav or breaking the brutalist look.
+   Hidden entirely above the 768px breakpoint.
+═══════════════════════════════════════════════════ */
+.mobile-tabbar {
+  display: none; /* enabled only inside the mobile media query below */
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  background: none;
+  border: none;
+  color: var(--gray-4);
+  font-family: var(--ff-mono);
+  font-size: 0.55rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  position: relative;
+  padding: 0.4rem 0 0.25rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.25s;
+}
+
+.tab-item svg {
+  width: 21px;
+  height: 21px;
+  stroke: currentColor;
+  transition: transform 0.25s var(--ease-out);
+}
+
+.tab-item.active { color: var(--white); }
+.tab-item.active svg { transform: translateY(-1px); }
+
+/* Thin top accent marking the active tab — no dots, no clutter */
+.tab-item.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 2px;
+  background: var(--white);
+}
+
+.tab-icon-wrap { position: relative; display: inline-flex; }
+
+.tab-badge {
+  position: absolute;
+  top: -4px;
+  right: -8px;
+  min-width: 14px;
+  height: 14px;
+  padding: 0 3px;
+  border-radius: 50%;
+  background: var(--accent-urgent);
+  color: var(--white);
+  font-family: var(--ff-mono);
+  font-size: 0.52rem;
+  line-height: 14px;
+  text-align: center;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.tab-badge.is-empty { opacity: 0; transform: scale(0.5); }
 
 /* ─── MAGNETIC BUTTON ─── */
 .mag-btn {
@@ -949,6 +1033,34 @@ body.cursor-text  #cursor-ring { width: 3px; height: 48px; border-radius: 2px; }
   .footer-bottom { flex-direction: column; gap: 0.75rem; }
   .cart-drawer { width: 100%; border-left: none; }
   .drawer-form-row { grid-template-columns: 1fr; gap: 0; }
+
+  /* Top nav shrinks to just the wordmark — Collection + Bag move
+     to the persistent bottom tab bar below, so nothing is lost,
+     it's just relocated to where a thumb can actually reach it. */
+  .site-nav { justify-content: center; }
+  .nav-right { display: none; }
+
+  /* Reveal the bottom tab bar and reserve space for it so the
+     footer / last section is never hidden underneath it. */
+  .mobile-tabbar {
+    display: flex;
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 700; /* above the top nav (500), below the cart drawer (800) */
+    height: calc(60px + env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom);
+    background: rgba(0,0,0,0.88);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    backdrop-filter: blur(20px) saturate(160%);
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  body { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
+}
+
+/* Keep the toast clear of the bottom tab bar on small screens */
+@media (max-width: 640px) {
+  .toast { bottom: calc(60px + env(safe-area-inset-bottom) + 1.25rem); }
 }
 
 .hero-video {
