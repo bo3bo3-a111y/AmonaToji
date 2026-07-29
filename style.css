@@ -22,6 +22,8 @@ html { scroll-behavior: smooth; font-size: 16px; }
   --gray-7:  #E5E5E5;
   --gray-8:  #F5F5F5;
 
+  --accent-urgent: #E8543E;
+
   --ff-display: 'Anton', sans-serif;
   --ff-body:    'DM Sans', sans-serif;
   --ff-mono:    'DM Mono', monospace;
@@ -550,6 +552,25 @@ body.cursor-text  #cursor-ring { width: 3px; height: 48px; border-radius: 2px; }
   color: var(--gray-5);
 }
 
+.di-color {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--ff-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gray-5);
+}
+
+.di-color-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.3);
+  flex-shrink: 0;
+}
+
 .di-remove {
   flex-shrink: 0;
   display: flex;
@@ -707,20 +728,46 @@ body.cursor-text  #cursor-ring { width: 3px; height: 48px; border-radius: 2px; }
 .toast {
   position: fixed;
   bottom: 2rem; right: 2rem;
-  background: var(--white);
-  color: var(--black);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--black);
+  color: var(--white);
+  border: 1px solid rgba(255,255,255,0.14);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.45);
   font-family: var(--ff-mono);
   font-size: 0.7rem;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  padding: 1rem 1.5rem;
+  padding: 0.95rem 1.4rem 0.95rem 1.1rem;
+  max-width: min(360px, calc(100vw - 2.5rem));
   opacity: 0;
-  transform: translateY(1rem);
-  transition: opacity 0.3s, transform 0.3s;
+  transform: translateX(1.25rem);
+  transition: opacity 0.35s cubic-bezier(.16,1,.3,1), transform 0.35s cubic-bezier(.16,1,.3,1);
   pointer-events: none;
   z-index: 9000;
 }
-.toast.show { opacity: 1; transform: translateY(0); }
+.toast.show { opacity: 1; transform: translateX(0); }
+
+.toast-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+}
+.toast-msg { line-height: 1.5; }
+
+.toast-success .toast-icon { color: var(--black); background: var(--white); }
+.toast-success { border-left: 2px solid var(--white); }
+
+.toast-error .toast-icon { color: var(--white); background: var(--accent-urgent); }
+.toast-error { border-left: 2px solid var(--accent-urgent); }
+
+@media (max-width: 640px) {
+  .toast { left: 1.25rem; right: 1.25rem; bottom: 1.25rem; max-width: none; }
+}
 
 /* ═══════════════════════════════════════════════════
    FEATURE 1 — LIVE CLOCK

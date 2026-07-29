@@ -119,17 +119,42 @@
     group.dispatchEvent(new CustomEvent('colorchange', { detail: { color: btn.dataset.color } }));
   });
 
-  /* ─── TOAST ─── */
-  window.showToast = function (msg) {
+  /* ─── TOAST ───
+     showToast(msg, type) — type is 'success' (default) or 'error'.
+     Success toasts get a checkmark icon; error toasts get an alert icon
+     and a red accent bar, so validation messages read differently from
+     confirmations at a glance. */
+  window.showToast = function (msg, type) {
+    type = type === 'error' ? 'error' : 'success';
+
     let t = document.getElementById('toast');
     if (!t) {
       t = document.createElement('div');
       t.id = 'toast';
-      t.className = 'toast';
       document.body.appendChild(t);
     }
-    t.textContent = msg;
+    t.classList.add('toast');
+    if (!t.querySelector('.toast-msg')) {
+      t.innerHTML =
+        '<span class="toast-icon" aria-hidden="true"></span>' +
+        '<span class="toast-msg"></span>';
+    }
+
+    t.classList.remove('toast-success', 'toast-error');
+    t.classList.add('toast-' + type);
+
+    const icon = t.querySelector('.toast-icon');
+    icon.innerHTML = type === 'error'
+      ? '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="6.25" stroke="currentColor" stroke-width="1.3"/><path d="M7 3.8v3.6M7 9.9h.01" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>'
+      : '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="6.25" stroke="currentColor" stroke-width="1.3"/><path d="M4.2 7.2l1.9 1.9 3.7-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+    t.querySelector('.toast-msg').textContent = msg;
+
+    // Restart the animation even if a toast is already showing
+    t.classList.remove('show');
+    void t.offsetWidth; // force reflow
     t.classList.add('show');
+
     clearTimeout(t._timer);
     t._timer = setTimeout(() => t.classList.remove('show'), 3200);
   };
@@ -163,28 +188,24 @@
   }
 
   /* Public API */
- /* Public API */
   window.cartAddItem = function (name, price, size, img, color) {
-    // 1. تحقق إضافي في حالة ما إذا مرر الكود مقاساً فارغاً بالخطأ
+    // تحقق إضافي في حالة ما إذا مرر الكود مقاساً فارغاً بالخطأ
     if (!size || size === "" || size === "ONE") {
-      // إذا كنت تستعمل دالة handleDropBagClick في الـ HTML فلا داعي للقلق، هذا مجرد جدار حماية إضافي
-      showToast('المرجو اختيار المقاس أولاً');
+      showToast('المرجو اختيار المقاس أولاً', 'error');
       return;
     }
 
-    // 2. تحقق من اختيار اللون (أبيض / أسود)
-    if (!color || color === "") {
-      showToast('المرجو اختيار اللون أولاً');
-      return;
-    }
+    // ملاحظة: التحقق من "اللون" تم حذفه لأن الموقع حالياً لا يحتوي على
+    // خيار ألوان (color-opt) في أي بطاقة منتج. `color` بقا بارامتر
+    // اختياري — إيلا زدت خيار الألوان مستقبلاً، رجّع هاد التحقق.
 
     _loadCart();
     const id = Date.now() + '_' + Math.random().toString(36).slice(2, 7);
-    _cart.push({ id, name, price, size, img, color });
+    _cart.push({ id, name, price, size, img, color: color || '' });
     _saveCart();
     _updateAllBadges();
     _renderDrawerItems();
-    showToast(name + ' · ' + size + ' · ' + color + ' added to bag');
+    showToast('Added to bag — ' + name + ' (' + size + (color ? ', ' + color : '') + ')');
   };
 
   window.cartRemoveItem = function (id) {
@@ -300,7 +321,7 @@
     _loadCart();
 
     if (_cart.length === 0) {
-      showToast('Your bag is empty — add items first');
+      showToast('Your bag is empty — add items first', 'error');
       return;
     }
 
@@ -308,9 +329,9 @@
     const phone   = (document.getElementById('d-phone')   || {}).value?.trim();
     const address = (document.getElementById('d-address') || {}).value?.trim();
 
-    if (!name)    { showToast('Please enter your full name');    return; }
-    if (!phone)   { showToast('Please enter your phone number'); return; }
-    if (!address) { showToast('Please enter your address');      return; }
+    if (!name)    { showToast('Please enter your full name', 'error');    return; }
+    if (!phone)   { showToast('Please enter your phone number', 'error'); return; }
+    if (!address) { showToast('Please enter your address', 'error');      return; }
 
     const itemLines = _cart.map((item, i) =>
       `  ${i + 1}. ${item.name} · Size ${item.size} · Color ${item.color || '-'} · ${item.price} MAD`
@@ -341,15 +362,12 @@
     const address = (document.getElementById('o-address') || {}).value?.trim();
     const product = (document.getElementById('o-product') || {}).value;
     const size    = (document.getElementById('o-size')    || {}).value;
-    const colorEl = document.querySelector('#order-form-color-wrap .color-opt.active');
-    const color   = colorEl ? colorEl.dataset.color : '';
 
-    if (!name)    { showToast('Please enter your full name');    return; }
-    if (!phone)   { showToast('Please enter your phone number'); return; }
-    if (!address) { showToast('Please enter your address');      return; }
-    if (!product) { showToast('Please select a product');        return; }
-    if (!size)    { showToast('Please select a size');           return; }
-    if (!color)   { showToast('Please select a color');          return; }
+    if (!name)    { showToast('Please enter your full name', 'error');    return; }
+    if (!phone)   { showToast('Please enter your phone number', 'error'); return; }
+    if (!address) { showToast('Please enter your address', 'error');      return; }
+    if (!product) { showToast('Please select a product', 'error');        return; }
+    if (!size)    { showToast('Please select a size', 'error');           return; }
 
     const msg =
       '🖤 *ORDER — AMONATOJI*\n\n' +
@@ -357,7 +375,6 @@
       '📞 Phone: '   + phone   + '\n' +
       '📦 Product: ' + product + '\n' +
       '📐 Size: '    + size    + '\n' +
-      '🎨 Color: '   + color   + '\n' +
       '📍 Address: ' + address + '\n\n' +
       '💳 Payment: Cash on Delivery\n' +
       '_Sent from AmonaToji.com_';

@@ -280,6 +280,63 @@
   margin-left: 0.25rem;
 }
 
+/* ─── SCARCITY & ANCHOR PRICING ─── */
+.pc-scarcity {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray-5);
+  margin-bottom: 0.9rem;
+}
+
+.pc-scarcity-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent-urgent);
+  flex-shrink: 0;
+  box-shadow: 0 0 0 0 rgba(232, 84, 62, 0.5);
+  animation: scarcityPulse 2.2s infinite;
+}
+
+@keyframes scarcityPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(232, 84, 62, 0.45); }
+  70%  { box-shadow: 0 0 0 6px rgba(232, 84, 62, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(232, 84, 62, 0); }
+}
+
+.pc-price-group {
+  display: flex;
+  align-items: baseline;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.pc-price-old {
+  font-family: var(--ff-mono);
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: var(--gray-4);
+  text-decoration: line-through;
+  text-decoration-color: var(--gray-3);
+  text-decoration-thickness: 1px;
+}
+
+.pc-save-badge {
+  font-family: var(--ff-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-urgent);
+  border: 1px solid rgba(232, 84, 62, 0.4);
+  padding: 0.2rem 0.45rem;
+  white-space: nowrap;
+}
+
 .size-select {
   font-family: var(--ff-mono);
   font-size: 0.62rem;
@@ -535,12 +592,12 @@
 <!-- FILTER BAR -->
 <div class="filter-bar">
   <div class="filter-group">
-    <button class="filter-btn active">All</button>
-    <button class="filter-btn">Tops</button>
-    <button class="filter-btn">Bottoms</button>
-    <button class="filter-btn">Outerwear</button>
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="Tops">Tops</button>
+    <button class="filter-btn" data-filter="Bottoms">Bottoms</button>
+    <button class="filter-btn" data-filter="Outerwear">Outerwear</button>
   </div>
-  <span class="filter-count">05 pieces</span>
+  <span class="filter-count" id="filter-count">10 pieces</span>
 </div>
 
 <!-- PRODUCTS -->
@@ -548,7 +605,7 @@
   <div class="product-grid">
 
     <!-- 1 — Rei evangelion Oversize T-Shirt -->
-    <div class="product-card" data-reveal>
+    <div class="product-card" data-reveal data-category="Tops">
       <div class="pc-img-wrap">
         <img class="pc-img" src="img/p1.jpg" alt="Rei evangelion Oversize T-Shirt" />
         <span class="pc-number">001</span>
@@ -560,8 +617,12 @@
       <div class="pc-info">
         <div class="pc-tag">Oversize T-Shirt 240gsm</div>
         <div class="pc-name">Rei evangelion Oversize T-Shirt</div>
+        <div class="pc-scarcity"><span class="pc-scarcity-dot"></span>Limited Drop — 14 pieces left worldwide</div>
         <div class="pc-row">
-          <div class="pc-price">187<sub>MAD</sub></div>
+          <div class="pc-price-group">
+            <span class="pc-price-old">259 MAD</span>
+            <div class="pc-price">187<sub>MAD</sub></div>
+          </div>
           <select class="size-select" aria-label="Select size" data-product="Rei evangelion Oversize T-Shirt" data-price="187" data-img="p1.jpg">
             <option value="">Size</option>
             <option value="S">S</option>
@@ -578,20 +639,24 @@
     </div>
 
     <!-- 2 — Gojo's hands  Oversize T-Shirt -->
-    <div class="product-card" data-reveal>
+    <div class="product-card" data-reveal data-category="Tops">
       <div class="pc-img-wrap">
         <img class="pc-img" src="img/p2.jpg" alt="Gojo's hands  Oversize T-Shirt" />
         <span class="pc-number">002</span>
         <span class="pc-status">In Stock</span>
         <div class="pc-overlay">
-          <button class="pc-quick" onclick="handleAddToBag(this, 'Gojo hands  Oversize T-Shirt', 199, 'p2.jpg')">Add to Bag</button>
+          <button class="pc-quick" onclick="handleAddToBag(this, 'Gojo\'s hands  Oversize T-Shirt', 199, 'p2.jpg')">Add to Bag</button>
         </div>
       </div>
       <div class="pc-info">
         <div class="pc-tag">Oversize T-Shirt 240gsm</div>
         <div class="pc-name">Gojo's hands  Oversize T-Shirt</div>
+        <div class="pc-scarcity"><span class="pc-scarcity-dot"></span>Limited Drop — 9 pieces left worldwide</div>
         <div class="pc-row">
-          <div class="pc-price">199<sub>MAD</sub></div>
+          <div class="pc-price-group">
+            <span class="pc-price-old">279 MAD</span>
+            <div class="pc-price">199<sub>MAD</sub></div>
+          </div>
           <select class="size-select" aria-label="Select size" data-product="Gojo's hands  Oversize T-Shirt" data-price="199" data-img="p2.jpg">
             <option value="">Size</option>
             <option value="S">S</option>
@@ -608,7 +673,7 @@
     </div>
 
     <!-- 3 — kurapika Oversize T-Shirt -->
-    <div class="product-card" data-reveal>
+    <div class="product-card" data-reveal data-category="Tops">
   <div class="pc-img-wrap">
     <img class="pc-img" src="img/p3.jpg" alt="kurapika Oversize T-Shirt" />
     <span class="pc-number">003</span>
@@ -622,9 +687,13 @@
     <div class="pc-tag">Oversize T-Shirt 240gsm</div>
     
     <div class="pc-name">kurapika Oversize T-Shirt</div>
+    <div class="pc-scarcity"><span class="pc-scarcity-dot"></span>Limited Drop — 21 pieces left worldwide</div>
 
     <div class="pc-row">
-      <div class="pc-price">199<sub>MAD</sub></div>
+      <div class="pc-price-group">
+        <span class="pc-price-old">279 MAD</span>
+        <div class="pc-price">199<sub>MAD</sub></div>
+      </div>
       <select class="size-select" aria-label="Select size" data-product="kurapika Oversize T-Shirt" data-price="199" data-img="p3.jpg">
         <option value="">Size</option>
         <option value="S">S</option>
@@ -641,20 +710,24 @@
 </div>
 
     <!-- 4 — yuta Oversize T-Shirt -->
-    <div class="product-card" data-reveal>
+    <div class="product-card" data-reveal data-category="Tops">
       <div class="pc-img-wrap">
         <img class="pc-img" src="img/p4.jpg" alt="yuta Oversize T-Shirt" />
         <span class="pc-number">004</span>
         <span class="pc-status">In Stock</span>
         <div class="pc-overlay">
-          <button class="pc-quick" onclick="handleAddToBag(this, 'Shell Jacket', 187, 'p4.jpg')">Add to Bag</button>
+          <button class="pc-quick" onclick="handleAddToBag(this, 'yuta Oversize T-Shirt', 187, 'p4.jpg')">Add to Bag</button>
         </div>
       </div>
       <div class="pc-info">
         <div class="pc-tag">Oversize T-Shirt 240gsm</div>
         <div class="pc-name">yuta Oversize T-Shirt</div>
+        <div class="pc-scarcity"><span class="pc-scarcity-dot"></span>Limited Drop — 17 pieces left worldwide</div>
         <div class="pc-row">
-          <div class="pc-price">187<sub>MAD</sub></div>
+          <div class="pc-price-group">
+            <span class="pc-price-old">259 MAD</span>
+            <div class="pc-price">187<sub>MAD</sub></div>
+          </div>
           <select class="size-select" aria-label="Select size" data-product="yuta Oversize T-Shirt" data-price="187" data-img="p4.jpg">
             <option value="">Size</option>
             <option value="S">S</option>
@@ -671,20 +744,24 @@
     </div>
 
     <!-- 5 — eye Oversize T-Shirt -->
-    <div class="product-card" data-reveal>
+    <div class="product-card" data-reveal data-category="Tops">
       <div class="pc-img-wrap">
         <img class="pc-img" src="img/p5.jpg" alt="eye Oversize T-Shirt" />
         <span class="pc-number">005</span>
         <span class="pc-status">In Stock</span>
         <div class="pc-overlay">
-          <button class="pc-quick" onclick="handleAddToBag(this, 'Utility Short', 187, 'p5.jpg')">Add to Bag</button>
+          <button class="pc-quick" onclick="handleAddToBag(this, 'eye Oversize T-Shirt', 187, 'p5.jpg')">Add to Bag</button>
         </div>
       </div>
       <div class="pc-info">
         <div class="pc-tag">Oversize T-Shirt 240gsm</div>
         <div class="pc-name">eye Oversize T-Shirt</div>
+        <div class="pc-scarcity"><span class="pc-scarcity-dot"></span>Limited Drop — 6 pieces left worldwide</div>
         <div class="pc-row">
-          <div class="pc-price">187<sub>MAD</sub></div>
+          <div class="pc-price-group">
+            <span class="pc-price-old">259 MAD</span>
+            <div class="pc-price">187<sub>MAD</sub></div>
+          </div>
           <select class="size-select" aria-label="Select size" data-product="eye Oversize T-Shirt" data-price="187" data-img="p5.jpg">
             <option value="">Size</option>
             <option value="S">S</option>
@@ -701,20 +778,24 @@
     </div>
 
     <!-- 6 — shizuku Oversize T-Shirt -->
-    <div class="product-card" data-reveal>
+    <div class="product-card" data-reveal data-category="Tops">
       <div class="pc-img-wrap">
         <img class="pc-img" src="img/p6.png" alt="shizuku Oversize T-Shirt" />
         <span class="pc-number">006</span>
         <span class="pc-status">In Stock</span>
         <div class="pc-overlay">
-          <button class="pc-quick" onclick="handleAddToBag(this, 'Utility Short', 199, 'p6.png')">Add to Bag</button>
+          <button class="pc-quick" onclick="handleAddToBag(this, 'shizuku Oversize T-Shirt', 199, 'p6.png')">Add to Bag</button>
         </div>
       </div>
       <div class="pc-info">
         <div class="pc-tag">Oversize T-Shirt 240gsm</div>
         <div class="pc-name">shizuku Oversize T-Shirt</div>
+        <div class="pc-scarcity"><span class="pc-scarcity-dot"></span>Limited Drop — 23 pieces left worldwide</div>
         <div class="pc-row">
-          <div class="pc-price">199<sub>MAD</sub></div>
+          <div class="pc-price-group">
+            <span class="pc-price-old">279 MAD</span>
+            <div class="pc-price">199<sub>MAD</sub></div>
+          </div>
           <select class="size-select" aria-label="Select size" data-product="shizuku Oversize T-Shirt" data-price="199" data-img="p6.png">
             <option value="">Size</option>
             <option value="S">S</option>
@@ -731,20 +812,24 @@
     </div>
 
     <!-- 7 — reze Oversize T-Shirt -->
-    <div class="product-card" data-reveal>
+    <div class="product-card" data-reveal data-category="Tops">
       <div class="pc-img-wrap">
         <img class="pc-img" src="img/p7.png" alt="reze Oversize T-Shirt" />
         <span class="pc-number">007</span>
         <span class="pc-status">In Stock</span>
         <div class="pc-overlay">
-          <button class="pc-quick" onclick="handleAddToBag(this, 'Utility Short', 199, 'p7.png')">Add to Bag</button>
+          <button class="pc-quick" onclick="handleAddToBag(this, 'reze Oversize T-Shirt', 199, 'p7.png')">Add to Bag</button>
         </div>
       </div>
       <div class="pc-info">
         <div class="pc-tag">Oversize T-Shirt 240gsm</div>
         <div class="pc-name">reze Oversize T-Shirt</div>
+        <div class="pc-scarcity"><span class="pc-scarcity-dot"></span>Limited Drop — 11 pieces left worldwide</div>
         <div class="pc-row">
-          <div class="pc-price">199<sub>MAD</sub></div>
+          <div class="pc-price-group">
+            <span class="pc-price-old">279 MAD</span>
+            <div class="pc-price">199<sub>MAD</sub></div>
+          </div>
           <select class="size-select" aria-label="Select size" data-product="reze Oversize T-Shirt" data-price="199" data-img="p7.png">
             <option value="">Size</option>
             <option value="S">S</option>
@@ -761,20 +846,24 @@
     </div>
 
     <!-- 8 — kaneki Oversize T-Shirt -->
-    <div class="product-card" data-reveal>
+    <div class="product-card" data-reveal data-category="Tops">
       <div class="pc-img-wrap">
         <img class="pc-img" src="img/p8.png" alt="kaneki Oversize T-Shirt" />
         <span class="pc-number">008</span>
         <span class="pc-status">In Stock</span>
         <div class="pc-overlay">
-          <button class="pc-quick" onclick="handleAddToBag(this, 'Utility Short', 199, 'p8.png')">Add to Bag</button>
+          <button class="pc-quick" onclick="handleAddToBag(this, 'kaneki Oversize T-Shirt', 199, 'p8.png')">Add to Bag</button>
         </div>
       </div>
       <div class="pc-info">
         <div class="pc-tag">Oversize T-Shirt 240gsm</div>
         <div class="pc-name">kaneki Oversize T-Shirt</div>
+        <div class="pc-scarcity"><span class="pc-scarcity-dot"></span>Limited Drop — 3 pieces left worldwide</div>
         <div class="pc-row">
-          <div class="pc-price">199<sub>MAD</sub></div>
+          <div class="pc-price-group">
+            <span class="pc-price-old">279 MAD</span>
+            <div class="pc-price">199<sub>MAD</sub></div>
+          </div>
           <select class="size-select" aria-label="Select size" data-product="kaneki Oversize T-Shirt" data-price="199" data-img="p8.png">
             <option value="">Size</option>
             <option value="S">S</option>
@@ -791,20 +880,24 @@
     </div>
 
     <!-- 9 — kaneki Oversize T-Shirt (style 2) -->
-    <div class="product-card" data-reveal>
+    <div class="product-card" data-reveal data-category="Tops">
       <div class="pc-img-wrap">
         <img class="pc-img" src="img/p9.png" alt="kaneki Oversize T-Shirt (style 2)" />
         <span class="pc-number">008</span>
         <span class="pc-status">In Stock</span>
         <div class="pc-overlay">
-          <button class="pc-quick" onclick="handleAddToBag(this, 'Utility Short', 199, 'p9.png')">Add to Bag</button>
+          <button class="pc-quick" onclick="handleAddToBag(this, 'kaneki Oversize T-Shirt (style 2)', 199, 'p9.png')">Add to Bag</button>
         </div>
       </div>
       <div class="pc-info">
         <div class="pc-tag">Oversize T-Shirt 240gsm</div>
         <div class="pc-name">kaneki Oversize T-Shirt (style 2)</div>
+        <div class="pc-scarcity"><span class="pc-scarcity-dot"></span>Limited Drop — 27 pieces left worldwide</div>
         <div class="pc-row">
-          <div class="pc-price">199<sub>MAD</sub></div>
+          <div class="pc-price-group">
+            <span class="pc-price-old">279 MAD</span>
+            <div class="pc-price">199<sub>MAD</sub></div>
+          </div>
           <select class="size-select" aria-label="Select size" data-product="kaneki Oversize T-Shirt (style 2)" data-price="199" data-img="p9.png">
             <option value="">Size</option>
             <option value="S">S</option>
@@ -821,20 +914,24 @@
     </div>
 
     <!-- 10 — gojo Oversize T-Shirt -->
-    <div class="product-card" data-reveal>
+    <div class="product-card" data-reveal data-category="Tops">
       <div class="pc-img-wrap">
         <img class="pc-img" src="img/p10.png" alt="gojo Oversize T-Shirt" />
         <span class="pc-number">008</span>
         <span class="pc-status">In Stock</span>
         <div class="pc-overlay">
-          <button class="pc-quick" onclick="handleAddToBag(this, 'Utility Short', 199, 'p10.png')">Add to Bag</button>
+          <button class="pc-quick" onclick="handleAddToBag(this, 'gojo Oversize T-Shirt', 199, 'p10.png')">Add to Bag</button>
         </div>
       </div>
       <div class="pc-info">
         <div class="pc-tag">Oversize T-Shirt 240gsm</div>
         <div class="pc-name">gojo Oversize T-Shirt</div>
+        <div class="pc-scarcity"><span class="pc-scarcity-dot"></span>Limited Drop — 8 pieces left worldwide</div>
         <div class="pc-row">
-          <div class="pc-price">199<sub>MAD</sub></div>
+          <div class="pc-price-group">
+            <span class="pc-price-old">279 MAD</span>
+            <div class="pc-price">199<sub>MAD</sub></div>
+          </div>
           <select class="size-select" aria-label="Select size" data-product="gojo Oversize T-Shirt" data-price="199" data-img="p10.png">
             <option value="">Size</option>
             <option value="S">S</option>
@@ -916,11 +1013,16 @@
         <label class="form-label" for="o-product">Product</label>
         <select class="form-select-full" id="o-product">
           <option value="">Select a piece</option>
-          <option value="Oversized Tee — 350 MAD">Oversized Tee — 350 MAD</option>
-          <option value="Core Hoodie — 550 MAD">Core Hoodie — 550 MAD</option>
-          <option value="Cargo Pant — 620 MAD">Cargo Pant — 620 MAD</option>
-          <option value="Shell Jacket — 890 MAD">Shell Jacket — 890 MAD</option>
-          <option value="Utility Short — 290 MAD">Utility Short — 290 MAD</option>
+          <option value="Rei evangelion Oversize T-Shirt — 187 MAD">Rei evangelion Oversize T-Shirt — 187 MAD</option>
+          <option value="Gojo's hands Oversize T-Shirt — 199 MAD">Gojo's hands Oversize T-Shirt — 199 MAD</option>
+          <option value="kurapika Oversize T-Shirt — 199 MAD">kurapika Oversize T-Shirt — 199 MAD</option>
+          <option value="yuta Oversize T-Shirt — 187 MAD">yuta Oversize T-Shirt — 187 MAD</option>
+          <option value="eye Oversize T-Shirt — 187 MAD">eye Oversize T-Shirt — 187 MAD</option>
+          <option value="shizuku Oversize T-Shirt — 199 MAD">shizuku Oversize T-Shirt — 199 MAD</option>
+          <option value="reze Oversize T-Shirt — 199 MAD">reze Oversize T-Shirt — 199 MAD</option>
+          <option value="kaneki Oversize T-Shirt — 199 MAD">kaneki Oversize T-Shirt — 199 MAD</option>
+          <option value="kaneki Oversize T-Shirt (style 2) — 199 MAD">kaneki Oversize T-Shirt (style 2) — 199 MAD</option>
+          <option value="gojo Oversize T-Shirt — 199 MAD">gojo Oversize T-Shirt — 199 MAD</option>
         </select>
       </div>
       <div class="form-group">
@@ -1042,13 +1144,31 @@
 <div id="toast" class="toast"></div>
 <script src="shared.js"></script>
 <script>
-  /* ── Filter buttons ── */
+  /* ── Filter buttons — actually filters the product grid by category ── */
+  var _productCards = document.querySelectorAll('.product-grid .product-card[data-category]');
+  var _filterCountEl = document.getElementById('filter-count');
+
+  function _applyFilter(filter) {
+    var visible = 0;
+    _productCards.forEach(function(card) {
+      var match = filter === 'all' || card.getAttribute('data-category') === filter;
+      card.style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+    if (_filterCountEl) {
+      _filterCountEl.textContent = visible + (visible === 1 ? ' piece' : ' pieces');
+    }
+  }
+
   document.querySelectorAll('.filter-btn').forEach(function(btn) {
     btn.addEventListener('click', function() {
       document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
       this.classList.add('active');
+      _applyFilter(this.getAttribute('data-filter') || 'all');
     });
   });
+
+  _applyFilter('all');
 
   /* ── Observe item list to sync sections ── */
   function _syncDrawerSections() {
@@ -1070,9 +1190,8 @@
     var price  = sel ? parseInt(sel.getAttribute('data-price'), 10) : 0;
     var img    = sel ? sel.getAttribute('data-img')    : '';
 
-    if (!size) { showToast('Please select a size first'); return; }
+    if (!size) { showToast('Please select a size first', 'error'); return; }
     cartAddItem(name, price, size, img);
-    openModal();
   };
 
   /* ── Add to Bag from overlay quick button (no size needed — opens drawer) ── */
@@ -1081,9 +1200,8 @@
     var card = btn.closest('.product-card');
     var sel  = card ? card.querySelector('.size-select') : null;
     var size = sel ? sel.value : '';
-    if (!size) { showToast('Select a size on the card first'); return; }
+    if (!size) { showToast('Select a size on the card first', 'error'); return; }
     cartAddItem(name, price, size, img);
-    openModal();
   };
 </script>
 </body>

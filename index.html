@@ -459,6 +459,49 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   margin-top: 0.5rem;
 }
 
+/* ─── SCARCITY & ANCHOR PRICING ─── */
+.drop-scarcity {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--ff-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray-5);
+  margin-top: 0.6rem;
+}
+
+.drop-scarcity-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent-urgent);
+  flex-shrink: 0;
+  box-shadow: 0 0 0 0 rgba(232, 84, 62, 0.5);
+  animation: scarcityPulse 2.2s infinite;
+}
+
+@keyframes scarcityPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(232, 84, 62, 0.45); }
+  70%  { box-shadow: 0 0 0 6px rgba(232, 84, 62, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(232, 84, 62, 0); }
+}
+
+.drop-price-old {
+  font-family: var(--ff-mono);
+  font-size: 0.78rem;
+  color: var(--gray-4);
+  text-decoration: line-through;
+  text-decoration-color: var(--gray-3);
+  margin-right: 0.5rem;
+}
+
+.drop-price-now {
+  color: var(--white);
+  font-weight: 500;
+}
+
 /* ─── STATS STRIP ─── */
 .stats-strip {
   display: grid;
@@ -623,9 +666,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="drop-tag">Oversize T-Shirt 240gsm</div>
         <div class="drop-name">Rei evangelion Oversize T-Shirt</div>
         <div class="drop-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
-          <div class="drop-price">187 MAD</div>
-          
+          <div class="drop-price"><span class="drop-price-old">259 MAD</span><span class="drop-price-now">187 MAD</span></div>
         </div>
+        <div class="drop-scarcity"><span class="drop-scarcity-dot"></span>Limited Drop — 14 pieces left worldwide</div>
       </div>
     </div>
 
@@ -642,9 +685,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="drop-tag">Oversize T-Shirt 240gsm</div>
         <div class="drop-name">Gojo's hands Oversize T-Shirt</div>
         <div class="drop-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
-          <div class="drop-price">199 MAD</div>
-          
+          <div class="drop-price"><span class="drop-price-old">279 MAD</span><span class="drop-price-now">199 MAD</span></div>
         </div>
+        <div class="drop-scarcity"><span class="drop-scarcity-dot"></span>Limited Drop — 9 pieces left worldwide</div>
       </div>
     </div>
 
@@ -661,9 +704,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="drop-tag">Oversize T-Shirt 240gsm</div>
         <div class="drop-name">kurapika Oversize T-Shirt</div>
         <div class="drop-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
-          <div class="drop-price">199 MAD</div>
-          
+          <div class="drop-price"><span class="drop-price-old">279 MAD</span><span class="drop-price-now">199 MAD</span></div>
         </div>
+        <div class="drop-scarcity"><span class="drop-scarcity-dot"></span>Limited Drop — 21 pieces left worldwide</div>
       </div>
     </div>
   </div>
@@ -870,15 +913,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   });
 
   // Show/hide total + form + perks together with item list
-  var _origRender = window.cartAddItem;
   function _syncDrawerSections() {
     var hasItems = document.getElementById('drawer-item-list').children.length > 0;
     ['drawer-total-wrap','drawer-form-wrap','drawer-perks-wrap'].forEach(function(id) {
       var el = document.getElementById(id);
       if (el) el.style.display = hasItems ? 'flex' : 'none';
-      if (el && id === 'drawer-total-wrap') el.style.display = hasItems ? 'flex' : 'none';
-      if (el && id === 'drawer-form-wrap')  el.style.display = hasItems ? 'flex' : 'none';
-      if (el && id === 'drawer-perks-wrap') el.style.display = hasItems ? 'flex' : 'none';
     });
   }
 
