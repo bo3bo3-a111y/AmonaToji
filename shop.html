@@ -112,12 +112,31 @@
   color: var(--white);
 }
 
-/* ─── FILTER BAR ─── */
+/* ─── RESULTS WRAPPER — hidden until a category card is picked ───
+   `display: none` by default so the count strip + full product grid don't
+   exist on screen (or in layout) at all on first load, PC or mobile. JS
+   swaps this to `.is-visible` on the first card click, which both shows it
+   and plays a short fade/rise so the reveal feels intentional rather than
+   a hard jump-cut. */
+.collection-results {
+  display: none;
+}
+.collection-results.is-visible {
+  display: block;
+  animation: fadeUp 0.55s var(--ease-out);
+}
+
+/* ─── FILTER BAR ───
+   Explicitly `position: static` (not just the CSS default) so this can
+   never accidentally start following the scroll on mobile — no sticky, no
+   fixed, it just sits in normal document flow like any other section and
+   scrolls away naturally, by design. */
 .filter-bar {
+  position: static;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 1.25rem clamp(2rem, 5vw, 5rem);
+  justify-content: flex-end;
+  padding: 1rem clamp(2rem, 5vw, 5rem);
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
@@ -143,6 +162,162 @@
   font-size: 0.62rem;
   letter-spacing: 0.2em;
   color: var(--gray-4);
+}
+
+/* ─── CATEGORY SELECTOR — visual cards (T-Shirts / Hoodies) ───
+   Full-bleed image cards standing in for the old text filter buttons.
+   Also `position: static`, same reasoning as .filter-bar above — this
+   section is not, and should never become, sticky on any breakpoint. */
+.cat-select {
+  position: static;
+  padding: clamp(2rem, 5vw, 3rem) clamp(2rem, 5vw, 5rem) 0;
+}
+
+.cat-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.cat-card {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border: none;
+  background: var(--gray-1);
+  cursor: none;
+  overflow: hidden;
+  isolation: isolate;
+}
+.cat-card + .cat-card { border-left: 1px solid rgba(255,255,255,0.12); }
+
+.cat-card-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(45%) contrast(1.05) brightness(0.9);
+  transform: scale(1.02);
+  transition: transform 0.7s var(--ease-out), filter 0.5s var(--ease-out);
+}
+
+.cat-card-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.92) 100%);
+  transition: background 0.4s var(--ease-out);
+}
+
+.cat-card-content {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.cat-card-eyebrow {
+  font-family: var(--ff-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gray-5);
+}
+
+.cat-card-title {
+  font-family: var(--ff-display);
+  font-size: clamp(1.7rem, 4vw, 2.6rem);
+  line-height: 0.95;
+  color: var(--white);
+}
+
+.cat-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gray-5);
+  margin-top: 0.3rem;
+  transition: color 0.3s, gap 0.3s;
+}
+.cat-card-cta svg { transition: transform 0.3s var(--ease-out); }
+
+/* Active card — the currently-selected line gets a solid white top rule
+   and full-strength image, so the current selection is unmistakable even
+   without a separate text label anywhere else on the page. */
+.cat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--white);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s var(--ease-out);
+  z-index: 2;
+}
+.cat-card.is-active::before { transform: scaleX(1); }
+.cat-card.is-active .cat-card-img { filter: grayscale(0%) contrast(1.05) brightness(1); }
+.cat-card.is-active .cat-card-cta { color: var(--white); }
+
+/* Hover / focus — image sharpens and zooms, scrim lightens, CTA + arrow
+   animate forward. Identical treatment on keyboard focus. */
+.cat-card:hover .cat-card-img,
+.cat-card:focus-visible .cat-card-img {
+  transform: scale(1.07);
+  filter: grayscale(0%) contrast(1.05) brightness(1);
+}
+.cat-card:hover .cat-card-scrim,
+.cat-card:focus-visible .cat-card-scrim {
+  background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.12) 40%, rgba(0,0,0,0.88) 100%);
+}
+.cat-card:hover .cat-card-cta,
+.cat-card:focus-visible .cat-card-cta { color: var(--white); gap: 0.7rem; }
+.cat-card:hover .cat-card-cta svg,
+.cat-card:focus-visible .cat-card-cta svg { transform: translateX(3px); }
+.cat-card:focus-visible { outline: 1px solid var(--white); outline-offset: -1px; }
+
+/* Touch devices have no hover — give a quick :active press-state instead so
+   tapping still feels responsive on mobile */
+.cat-card:active .cat-card-img { transform: scale(1.04); filter: grayscale(0%) brightness(1); }
+
+@media (max-width: 900px) {
+  .cat-select { padding: 1.5rem clamp(1.25rem, 5vw, 5rem) 0; }
+  .cat-card-grid { grid-template-columns: 1fr; }
+  .cat-card { aspect-ratio: 16 / 10; }
+  .cat-card + .cat-card { border-left: none; border-top: 1px solid rgba(255,255,255,0.12); }
+}
+
+/* ─── EMPTY STATE — shown when a category has no live pieces yet ─── */
+.grid-empty-state {
+  display: none;
+  grid-column: 1 / -1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: clamp(4rem, 10vw, 7rem) 2rem;
+  gap: 1.25rem;
+}
+.grid-empty-state.is-active { display: flex; }
+.empty-title {
+  font-family: var(--ff-display);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--white);
+}
+.empty-copy {
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: var(--gray-5);
+  max-width: 38ch;
+  line-height: 1.8;
 }
 
 /* ─── PRODUCT GRID ─── */
@@ -628,20 +803,73 @@
   </div>
 </section>
 
-<!-- FILTER BAR -->
-<div class="filter-bar">
-  <div class="filter-group">
-    <button class="filter-btn active" data-filter="all">All</button>
-    <button class="filter-btn" data-filter="Tops">Tops</button>
-    <button class="filter-btn" data-filter="Bottoms">Bottoms</button>
-    <button class="filter-btn" data-filter="Outerwear">Outerwear</button>
-  </div>
-  <span class="filter-count" id="filter-count">10 pieces</span>
-</div>
+<!-- ═══ CATEGORY SELECTOR — visual cards replace the old text filter buttons ═══
+     Clicking a card filters the grid below. "T-Shirts" maps to the existing
+     data-category="Tops" tag already used by all 10 live pieces. "Hoodies"
+     is fully wired up and ready — it'll populate the instant a product with
+     data-category="Hoodies" is added to the grid; until then it shows the
+     "coming soon" empty state instead of an empty grid. -->
+<section class="cat-select">
+  <div class="cat-card-grid">
 
-<!-- PRODUCTS -->
-<section class="product-section">
-  <div class="product-grid">
+    <button type="button" class="cat-card" data-filter="Tops" aria-pressed="false" aria-label="Voir la collection T-Shirts">
+      <img class="cat-card-img" src="img/tshirt.jpg" alt="" loading="lazy" />
+      <span class="cat-card-scrim"></span>
+      <span class="cat-card-content">
+        <span class="cat-card-eyebrow">Ligne 01</span>
+        <span class="cat-card-title">T-Shirts</span>
+        <span class="cat-card-cta">
+          Voir la collection
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </span>
+    </button>
+
+    <button type="button" class="cat-card" data-filter="Hoodies" aria-pressed="false" aria-label="Voir la collection Hoodies">
+      <!-- TODO: swap for a real hoodie product shot once that line ships —
+           reusing a placeholder since no hoodie pieces exist yet below. -->
+      <img class="cat-card-img" src="img/hodyy.jpg" alt="" loading="lazy" />
+      <span class="cat-card-scrim"></span>
+      <span class="cat-card-content">
+        <span class="cat-card-eyebrow">Ligne 02</span>
+        <span class="cat-card-title">Hoodies</span>
+        <span class="cat-card-cta">
+          Voir la collection
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </span>
+    </button>
+
+  </div>
+</section>
+
+<!-- ═══ RESULTS — hidden until a category card is clicked ═══
+     Nothing inside here (count strip + product grid) exists on screen at
+     all on first load, on PC or mobile — no flash of hidden content, no
+     collapsed-but-present grid. JS below reveals this the moment either
+     card is picked, then filters + scrolls it into view. -->
+<div class="collection-results" id="collection-results">
+
+  <!-- PIECE COUNT STRIP — plain in-flow block, not sticky/fixed on any
+       breakpoint; scrolls away with the page like normal content. -->
+  <div class="filter-bar">
+    <span class="filter-count" id="filter-count">10 pieces</span>
+  </div>
+
+  <!-- PRODUCTS -->
+  <section class="product-section">
+    <div class="product-grid">
+
+      <!-- Empty state — shown when the active category has no live pieces yet -->
+      <div class="grid-empty-state" id="grid-empty-state">
+        <div class="empty-title">Drop coming soon</div>
+        <p class="empty-copy">This line is coming soon. Contact us on WhatsApp to be notified as soon as it's released.</p>
+        <a href="https://wa.me/212632376348" target="_blank" rel="noopener" class="mag-btn mag-btn-ghost" style="font-size:0.65rem; padding:0.85rem 2rem;">Notify me on WhatsApp</a>
+      </div>
 
     <!-- 1 — Rei evangelion Oversize T-Shirt -->
     <div class="product-card" data-reveal data-category="Tops">
@@ -994,7 +1222,9 @@
     </div>
 
   </div>
-</section>
+  </section>
+
+</div><!-- /#collection-results -->
 
 <!-- MARQUEE -->
 <div class="marquee-outer">
@@ -1183,31 +1413,73 @@
 <div id="toast" class="toast"></div>
 <script src="shared.js"></script>
 <script>
-  /* ── Filter buttons — actually filters the product grid by category ── */
-  var _productCards = document.querySelectorAll('.product-grid .product-card[data-category]');
+  /* ── Category cards — filter the product grid, drive the empty state ── */
+  var _productCards  = document.querySelectorAll('.product-grid .product-card[data-category]');
   var _filterCountEl = document.getElementById('filter-count');
+  var _emptyStateEl  = document.getElementById('grid-empty-state');
 
   function _applyFilter(filter) {
     var visible = 0;
     _productCards.forEach(function(card) {
-      var match = filter === 'all' || card.getAttribute('data-category') === filter;
+      var match = card.getAttribute('data-category') === filter;
       card.style.display = match ? '' : 'none';
       if (match) visible++;
     });
     if (_filterCountEl) {
       _filterCountEl.textContent = visible + (visible === 1 ? ' piece' : ' pieces');
     }
+    if (_emptyStateEl) {
+      _emptyStateEl.classList.toggle('is-active', visible === 0);
+    }
   }
 
-  document.querySelectorAll('.filter-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
-      this.classList.add('active');
-      _applyFilter(this.getAttribute('data-filter') || 'all');
+  /* ── Category cards — reveal + filter the product grid on click ──
+     Nothing is shown on load: no card is marked .is-active, and
+     #collection-results stays display:none until the first click, on both
+     PC and mobile. */
+  var _productCards  = document.querySelectorAll('.product-grid .product-card[data-category]');
+  var _filterCountEl = document.getElementById('filter-count');
+  var _emptyStateEl  = document.getElementById('grid-empty-state');
+  var _resultsEl     = document.getElementById('collection-results');
+
+  function _applyFilter(filter) {
+    var visible = 0;
+    _productCards.forEach(function(card) {
+      var match = card.getAttribute('data-category') === filter;
+      card.style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+    if (_filterCountEl) {
+      _filterCountEl.textContent = visible + (visible === 1 ? ' piece' : ' pieces');
+    }
+    if (_emptyStateEl) {
+      _emptyStateEl.classList.toggle('is-active', visible === 0);
+    }
+  }
+
+  document.querySelectorAll('.cat-card').forEach(function(card) {
+    card.addEventListener('click', function() {
+      document.querySelectorAll('.cat-card').forEach(function(c) {
+        c.classList.remove('is-active');
+        c.setAttribute('aria-pressed', 'false');
+      });
+      this.classList.add('is-active');
+      this.setAttribute('aria-pressed', 'true');
+
+      _applyFilter(this.getAttribute('data-filter'));
+
+      // First click (or any click) reveals the results wrapper, then scrolls
+      // it into view — matters most on mobile where the grid starts below
+      // the fold once revealed.
+      if (_resultsEl) {
+        _resultsEl.classList.add('is-visible');
+        _resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
   });
 
-  _applyFilter('all');
+  /* No default _applyFilter() call on load — the grid stays fully hidden,
+     with no category pre-selected, until the user picks one. */
 
   /* ── Observe item list to sync sections ── */
   function _syncDrawerSections() {
