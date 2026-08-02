@@ -534,6 +534,104 @@
 .size-select:focus  { border-color: var(--white); }
 .size-select option { background: var(--gray-1); color: var(--white); }
 
+/* ─── CAP OPTIONS — product customization (قبّيات) ───
+   Sits inside .pc-info, between the size row and the Add to Bag button.
+   Built as a <fieldset> for real radio-group semantics (screen readers
+   announce it as a group with a legend), but visually it borrows the exact
+   tokens .size-select already uses — same mono font, 0.62rem size, 0.2
+   opacity hairline border, no border-radius, same hover/focus behavior —
+   so it reads as native to the card, not a bolted-on widget. The native
+   radio input is visually hidden (not display:none, so it stays keyboard
+   + screen-reader accessible) and a custom dot + the label itself carry
+   the checked state via :has(). */
+.cap-options {
+  border: none;
+  margin: 0 0 0.9rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.cap-options-legend {
+  font-family: var(--ff-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gray-5);
+  padding: 0;
+  margin-bottom: 0.15rem;
+}
+
+.cap-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--ff-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray-5);
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 0.55rem 0.75rem;
+  cursor: none;
+  transition: border-color 0.2s, color 0.2s, background-color 0.2s;
+}
+.cap-option:hover { border-color: rgba(255,255,255,0.5); color: var(--white); }
+
+/* Visually hidden but still focusable/clickable/announced — do not use
+   display:none or visibility:hidden here, that would break keyboard nav */
+.cap-option input[type="radio"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  margin: 0;
+  pointer-events: none;
+}
+
+.cap-option-dot {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 50%;
+  position: relative;
+  transition: border-color 0.2s;
+}
+.cap-option-dot::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  background: var(--white);
+  transform: scale(0);
+  transition: transform 0.2s var(--ease-out);
+}
+.cap-option input:checked ~ .cap-option-dot { border-color: var(--white); }
+.cap-option input:checked ~ .cap-option-dot::after { transform: scale(1); }
+
+.cap-option-text { flex: 1; }
+.cap-option-price { color: var(--gray-4); transition: color 0.2s; }
+
+/* Checked-state styling on the whole pill. :has() has full support across
+   Chrome/Safari/Firefox as of 2026; if you need to support something
+   older, mirror this with a `.is-checked` class toggled in your onchange
+   handler — same declarations, just swap the selector. */
+.cap-option:has(input:checked) {
+  border-color: var(--white);
+  color: var(--white);
+  background: rgba(255,255,255,0.05);
+}
+.cap-option:has(input:checked) .cap-option-price { color: var(--white); }
+.cap-option input:focus-visible ~ .cap-option-dot { outline: 1px solid var(--white); outline-offset: 2px; }
+
+@media (max-width: 480px) {
+  .cap-option { padding: 0.65rem 0.75rem; } /* slightly taller hit target on small touch screens */
+}
+
 /* ADD TO BAG button on product card */
 .pc-add-btn {
   width: 100%;
@@ -1207,6 +1305,84 @@
             <option value="XL">XL</option>
           </select>
         </div>
+        <button class="pc-add-btn" onclick="handleAddToBagFromCard(this)">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Add to Bag
+        </button>
+      </div>
+    </div>
+
+    <!-- 11 — kurapika oversize Hoodie -->
+    <div class="product-card" data-reveal data-category="Hoodies">
+      <div class="pc-img-wrap">
+        <img class="pc-img" src="img/h1.png" alt="kurapika oversize Hoodie" />
+        <span class="pc-number">011</span>
+        <span class="pc-status">In Stock</span>
+        <div class="pc-overlay">
+          <button class="pc-quick" onclick="handleAddToBag(this, 'kurapika oversize Hoodie', 279, 'h1.png')">Add to Bag</button>
+        </div>
+      </div>
+      <div class="pc-info">
+        <div class="pc-tag">Premium Oversized Hoodie</div>
+        <div class="pc-name">kurapika oversize Hoodie</div>
+        <div class="pc-scarcity"><span class="pc-scarcity-dot"></span>Limited Drop — 7 pieces left worldwide</div>
+        <div class="pc-row">
+          <div class="pc-price-group">
+            <div class="pc-price">279<sub>MAD</sub></div>
+          </div>
+          <select class="size-select" aria-label="Select size" data-product="kurapika oversize Hoodie" data-price="279" data-img="h1.png">
+            <option value="">Size</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+          </select>
+        </div>
+
+        <!-- ═══ CAP OPTIONS — new customization block, above Add to Bag ═══
+             `name` is scoped per-card (cap-option-011) so multiple hoodie
+             cards on the same page each get their own independent radio
+             group instead of fighting over one global selection. -->
+
+        <button class="pc-add-btn" onclick="handleAddToBagFromCard(this)">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Add to Bag
+        </button>
+      </div>
+    </div>
+
+    <!-- 11 —hunterxhuner oversize hoodie -->
+    <div class="product-card" data-reveal data-category="Hoodies">
+      <div class="pc-img-wrap">
+        <img class="pc-img" src="img/h2.png" alt="Chrollo Lucilfer oversize Hoodie" />
+        <span class="pc-number">011</span>
+        <span class="pc-status">In Stock</span>
+        <div class="pc-overlay">
+          <button class="pc-quick" onclick="handleAddToBag(this, 'Chrollo Lucilfer oversize Hoodie', 279, 'h2.png')">Add to Bag</button>
+        </div>
+      </div>
+      <div class="pc-info">
+        <div class="pc-tag">Premium Oversized Hoodie</div>
+        <div class="pc-name">Chrollo Lucilfer oversize Hoodie</div>
+        <div class="pc-scarcity"><span class="pc-scarcity-dot"></span>Limited Drop — 4 pieces left worldwide</div>
+        <div class="pc-row">
+          <div class="pc-price-group">
+            <div class="pc-price">279<sub>MAD</sub></div>
+          </div>
+          <select class="size-select" aria-label="Select size" data-product="Chrollo Lucilfer oversize Hoodie" data-price="279" data-img="h2.png">
+            <option value="">Size</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+          </select>
+        </div>
+
+        <!-- ═══ CAP OPTIONS — new customization block, above Add to Bag ═══
+             `name` is scoped per-card (cap-option-011) so multiple hoodie
+             cards on the same page each get their own independent radio
+             group instead of fighting over one global selection. -->
+
         <button class="pc-add-btn" onclick="handleAddToBagFromCard(this)">
           <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           Add to Bag
